@@ -1,0 +1,262 @@
+---
+resource_types:
+  - name: email
+    type: registry-image
+    source:
+      repository: pcfseceng/email-resource
+
+resources:
+  - name: aufgaben
+    icon: git
+    type: git
+    source: ((repo.k0s.pipeline))
+
+  - name: config
+    icon: git
+    type: git
+    source: ((repo.k0s.config))
+
+  - name: restore
+    icon: git
+    type: git
+    source: ((repo.k0s.backup))
+
+  - name: backup
+    icon: git
+    type: git
+    source: ((repo.k0s.backup))
+
+  - name: hourly
+    icon: clock-check
+    type: time
+    source:
+      interval: 1h
+
+  - name: once-daily
+    icon: clock-check
+    type: time
+
+  - name: weekly-sundays
+    icon: clock-check
+    type: time
+    source:
+      location: Europe/Berlin
+      days:
+        - Sunday
+
+  - name: k0sctl-image
+    icon: lambda
+    type: registry-image
+    source:
+      repository: omegasquad82/k0sctl-handler
+
+  - name: send-email
+    icon: email-alert
+    type: email
+    source:
+      smtp:
+        port: "587" # string
+        host: ((email.host))
+        username: ((secret.email.username))
+        password: ((secret.email.password))
+      from: ((email.dummy)) # don't worry,
+      to: [((email.from))] #  be silly ;c)
+
+shell_task: &shell_task
+  image: k0sctl-image
+  config: &shell_config
+    platform: linux
+    inputs:
+      - name: aufgaben
+      - name: config
+    outputs:
+      - name: auditlog
+      - name: config
+
+k0sctl_task: &k0sctl_task
+  task: k0sctl
+  image: k0sctl-image
+  config: &k0sctl_config
+    platform: linux
+    inputs:
+      - name: aufgaben
+      - name: config
+        optional: true
+      - name: restore
+        optional: true
+      - name: auditlog
+        optional: true
+    outputs:
+      - name: auditlog
+      - name: backup
+      - name: config
+    params: &k0sctl_params
+      DISABLE_TELEMETRY: false
+      K0SCTL_DIR_BAK: backup
+      K0SCTL_DIR_CFG: config
+      K0SCTL_DIR_LOG: auditlog
+      K0SCTL_DIR_RES: restore
+      K0SCTL_CFG_PATH: k0sctl.yaml
+      K0SCTL_CMD_NAME: ""
+      K0SCTL_CMD_ARGS: ""
+      PREFIX_BAK: k0s_backup
+      SUFFIX_BAK: tar.gz
+      SUFFIX_LOG: log
+      MAILBOX: ((host.mail))
+      SSH_KEY: ((host._key))
+    run:
+      path: k0sctl-handler.sh
+
+jobs:
+  - name: ping
+    public: true
+    serial: true
+    plan:
+      - do:
+          - in_parallel:
+              - get: hourly
+                trigger: true
+              - get: config
+                trigger: true
+              - get: aufgaben
+              - get: k0sctl-image
+          - <<: *shell_task
+            task: discover
+            config:
+              <<: *shell_config
+              run:
+                path: bash
+                user: root
+                args:
+                  - -c
+                  - |
+                    . aufgaben/scripts/common.sh
+                    tracerouteSSH config/k0sctl.yaml
+        on_failure: &notify_failure
+          put: send-email
+          inputs:
+            - auditlog
+          params:
+            subject_text: "((host.name)): k0sctl execution failed"
+            body_text: "please see attachments for further analysis"
+            attachment_globs: ["auditlog/*"]
+
+  # https://docs.k0sproject.io/latest/k0sctl-install/#install-using-k0sctl
+  - name: install
+    serial: true
+    plan:
+      - do:
+          - in_parallel:
+              - get: once-daily
+                trigger: true
+              - get: config
+                trigger: true
+                passed: [ping]
+              - get: aufgaben
+              - get: k0sctl-image
+          - <<: *k0sctl_task
+            params:
+              <<: *k0sctl_params
+              K0SCTL_CMD_NAME: install
+        on_failure:
+          <<: *notify_failure
+        on_success: &notify_success
+          put: send-email
+          inputs:
+            - auditlog
+          params:
+            subject_text: "((host.name)): k0sctl execution succeeded"
+            body_text: "please see attachments for further analysis"
+            attachment_globs: ["auditlog/*"]
+
+  # https://docs.k0sproject.io/latest/backup/#backuprestore-a-k0s-cluster-using-k0sctl
+  - name: init
+    serial: true
+    plan:
+      - in_parallel:
+          - get: config
+          - get: aufgaben
+          - get: k0sctl-image
+      - <<: *shell_task
+        task: prepare
+        config:
+          <<: *shell_config
+          run:
+            path: bash
+            user: root
+            args:
+              - -c
+              - |
+                . aufgaben/scripts/common.sh
+                prepareGIT config
+                initBranch ((repo.k0s.backup.branch))
+        on_success:
+          put: restore
+          params:
+            force: true # drop
+            repository: config
+            branch: ((repo.k0s.backup.branch))
+  - name: backup
+    serial: true
+    plan:
+      - do:
+          - in_parallel:
+              - get: weekly-sundays
+                trigger: true
+              - get: restore
+              - get: config
+                trigger: true
+                passed: [install]
+              - get: aufgaben
+              - get: k0sctl-image
+          - <<: *k0sctl_task
+            params:
+              <<: *k0sctl_params
+              K0SCTL_CMD_NAME: backup
+            on_success:
+              put: backup
+              params:
+                rebase: true
+                repository: backup
+                branch: ((repo.k0s.backup.branch))
+        on_failure:
+          <<: *notify_failure
+        on_success:
+          <<: *notify_success
+  - name: restore
+    serial: true
+    plan:
+      - do:
+          - in_parallel:
+              - get: restore
+              - get: config
+                passed: [ping]
+              - get: aufgaben
+              - get: k0sctl-image
+          - <<: *k0sctl_task
+            params:
+              <<: *k0sctl_params
+              K0SCTL_CMD_NAME: restore
+        on_failure:
+          <<: *notify_failure
+        on_success:
+          <<: *notify_success
+
+  # https://docs.k0sproject.io/latest/reset/#uninstall-a-k0s-cluster-using-k0sctl
+  - name: uninstall
+    serial: true
+    plan:
+      - do:
+          - in_parallel:
+              - get: config
+                passed: [install]
+              - get: aufgaben
+              - get: k0sctl-image
+          - <<: *k0sctl_task
+            params:
+              <<: *k0sctl_params
+              K0SCTL_CMD_NAME: uninstall
+        on_failure:
+          <<: *notify_failure
+        on_success:
+          <<: *notify_success
