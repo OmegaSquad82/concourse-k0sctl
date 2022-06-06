@@ -11,7 +11,7 @@ version)
 esac
 
 printHeading 'preparing environment'
-env | grep K0SCTL # show the vars that be
+env | grep K0SCTL # the vars that be
 prepareSSH "$SSH_KEY"
 
 CFG="$(pwd)/${K0SCTL_DIR_CFG:?}/${K0SCTL_CFG_PATH:?}"
@@ -54,7 +54,7 @@ restore)
 esac
 
 printHeading 'saving logfile'
-runCMD sudo mv ~/.cache/k0sctl/k0sctl.log "$LOG/$started-$K0SCTL_CMD_NAME.$SUFFIX_LOG"
+runCMD mv ~/.cache/k0sctl/k0sctl.log "$LOG/$started-$K0SCTL_CMD_NAME.$SUFFIX_LOG"
 
 case "$K0SCTL_CMD_NAME" in
 backup)

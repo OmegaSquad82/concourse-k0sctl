@@ -49,7 +49,7 @@ function runCMD() {
 }
 
 function prepareSSH() {
-	printHeading 'preparing ssh environment'
+	printHeading 'preparing ssh'
 	local privateKeyData="${1:-"${SSH_KEY:?'Need private key!'}"}"
 	local privateKeyName="${2:-id_ed25519}"
 	mkdir -p ~/.ssh
@@ -58,7 +58,7 @@ function prepareSSH() {
 }
 
 function prepareGIT() {
-	printHeading 'preparing git environment'
+	printHeading 'preparing git'
 	local repo_path="${1:?'Please specify a git repository!'}"
 	local git_mail="${2:-"${MAILBOX:?'Please specify your mail address!'}"}"
 	local git_name="${3:-"${GITNAME:-automaton @ http://concourse-ci.org}"}"
@@ -72,8 +72,8 @@ function cloneGitRepo() {
 	printHeading 'cloning git repository'
 	local clonerepo="${1:?'Please specify source repository!'}"
 	local dest_repo="${2:?'Please specify target repository!'}"
-	local user_name="${3:-"${HOME##*/}"}" # either root or app
-	runCMD sudo chown -R "$user_name" "$dest_repo"
+	local user_name="${3:-"${HOME##*/}"}" # should be root
+	runCMD chown -R "$user_name" "$dest_repo"
 	runCMD git clone "$clonerepo" "$dest_repo"
 }
 
