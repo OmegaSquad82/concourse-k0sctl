@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
 # shellcheck source=common.sh
 source "${0%/*}"/common.sh
-prepareSSH "$SSH_KEY"
+
+printHeading 'k0sctl handler'
+case "${K0SCTL_CMD_NAME-version}" in
+version)
+	runCMD k0sctl version
+	exit 0 # buildx test
+	;;
+esac
 
 printHeading 'preparing environment'
 env | grep K0SCTL # show the vars that be
+prepareSSH "$SSH_KEY"
+
 CFG="$(pwd)/${K0SCTL_DIR_CFG:?}/${K0SCTL_CFG_PATH:?}"
 checkFile "$CFG"
 
