@@ -17,12 +17,12 @@ resources:
     source: ((k0sctl.backup))
 
   - name: ping-timer
-    icon: clock-check
+    icon: network_ping
     type: time
     source: ((timer.ping))
 
   - name: backup-timer
-    icon: clock-check
+    icon: backup
     type: time
     source: ((timer.backup))
 
