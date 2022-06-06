@@ -6,20 +6,10 @@ resource_types:
       repository: pcfseceng/email-resource
 
 resources:
-  - name: aufgaben
-    icon: git
-    type: git
-    source: ((repo.k0s.pipeline))
-
   - name: config
     icon: git
     type: git
     source: ((repo.k0s.config))
-
-  - name: restore
-    icon: git
-    type: git
-    source: ((repo.k0s.backup))
 
   - name: backup
     icon: git
@@ -67,7 +57,6 @@ shell_task: &shell_task
   config: &shell_config
     platform: linux
     inputs:
-      - name: aufgaben
       - name: config
     outputs:
       - name: auditlog
@@ -79,7 +68,6 @@ k0sctl_task: &k0sctl_task
   config: &k0sctl_config
     platform: linux
     inputs:
-      - name: aufgaben
       - name: config
         optional: true
       - name: restore
@@ -118,7 +106,6 @@ jobs:
                 trigger: true
               - get: config
                 trigger: true
-              - get: aufgaben
               - get: k0sctl-image
           - <<: *shell_task
             task: discover
@@ -130,7 +117,7 @@ jobs:
                 args:
                   - -c
                   - |
-                    . aufgaben/scripts/common.sh
+                    . common.sh
                     tracerouteSSH config/k0sctl.yaml
         on_failure: &notify_failure
           put: send-email
@@ -152,7 +139,6 @@ jobs:
               - get: config
                 trigger: true
                 passed: [ping]
-              - get: aufgaben
               - get: k0sctl-image
           - <<: *k0sctl_task
             params:
@@ -175,7 +161,6 @@ jobs:
     plan:
       - in_parallel:
           - get: config
-          - get: aufgaben
           - get: k0sctl-image
       - <<: *shell_task
         task: prepare
@@ -187,11 +172,11 @@ jobs:
             args:
               - -c
               - |
-                . aufgaben/scripts/common.sh
+                . common.sh
                 prepareGIT config
                 initBranch ((repo.k0s.backup.branch))
         on_success:
-          put: restore
+          put: backup
           params:
             force: true # drop
             repository: config
@@ -204,10 +189,10 @@ jobs:
               - get: weekly-sundays
                 trigger: true
               - get: restore
+                resource: backup
               - get: config
                 trigger: true
                 passed: [install]
-              - get: aufgaben
               - get: k0sctl-image
           - <<: *k0sctl_task
             params:
@@ -229,9 +214,9 @@ jobs:
       - do:
           - in_parallel:
               - get: restore
+                resource: backup
               - get: config
                 passed: [ping]
-              - get: aufgaben
               - get: k0sctl-image
           - <<: *k0sctl_task
             params:
@@ -250,7 +235,6 @@ jobs:
           - in_parallel:
               - get: config
                 passed: [install]
-              - get: aufgaben
               - get: k0sctl-image
           - <<: *k0sctl_task
             params:
