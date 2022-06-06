@@ -36,23 +36,23 @@ started="$(date +%F-%H-%M-%S)"
 case "$K0SCTL_CMD_NAME" in
 install)
 	# shellcheck disable=SC2086
-	runCMD k0sctl apply --config "$CFG" ${K0SCTL_CMD_ARGS:=}
+	runCMD k0sctl apply --config "$CFG" ${K0SCTL_CMD_ARGS:-}
 	;;
 uninstall)
 	# shellcheck disable=SC2086
-	runCMD k0sctl reset --config "$CFG" --force $K0SCTL_CMD_ARGS
+	runCMD k0sctl reset --config "$CFG" --force ${K0SCTL_CMD_ARGS:-}
 	;;
 backup)
 	assertDir "$BAK"
 	assertDir "$RES"
 	# shellcheck disable=SC2086
-	runCMD k0sctl backup --config "$CFG" $K0SCTL_CMD_ARGS
+	runCMD k0sctl backup --config "$CFG" ${K0SCTL_CMD_ARGS:-}
 	;;
 restore)
 	assertDir "$RES"
 	assertFile "$RES/${latest}"
 	# shellcheck disable=SC2086
-	runCMD k0sctl apply --config "$CFG" --restore-from="$RES/${latest}" $K0SCTL_CMD_ARGS
+	runCMD k0sctl apply --config "$CFG" --restore-from="$RES/${latest}" ${K0SCTL_CMD_ARGS:-}
 	;;
 *)
 	exit 1 # EPERM Operation not permitted
