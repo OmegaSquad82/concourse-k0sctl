@@ -163,7 +163,7 @@ jobs:
               - -c
               - |
                 . common.sh
-                prepareGIT config
+                prepareGIT config ((host.mail))
                 initBranch ((repo.k0s.backup.branch))
         on_success:
           put: backup
