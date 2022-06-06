@@ -37,7 +37,7 @@ case "$K0SCTL_CMD_NAME" in
 install)
 	if [ -d "$RES" ] && [ -s "$RES/${latest}" ]; then
 		# shellcheck disable=SC2086
-		runCMD k0sctl apply --config "$CFG" --restore-from="${archive}" ${K0SCTL_CMD_ARGS:-}
+		runCMD k0sctl apply --config "$CFG" --restore-from="$RES/${latest}" ${K0SCTL_CMD_ARGS:-}
 	else
 		# shellcheck disable=SC2086
 		runCMD k0sctl apply --config "$CFG" ${K0SCTL_CMD_ARGS:-}
