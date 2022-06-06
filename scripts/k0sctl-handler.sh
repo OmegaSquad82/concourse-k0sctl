@@ -26,7 +26,7 @@ assertFile "$CFG"
 LOG="$(pwd)/${K0SCTL_DIR_LOG:-auditlog}"
 assertDir "$LOG"
 
-BAK="$(pwd)/${K0SCTL_DIR_BAK:-backup}"
+BAK="$(pwd)/${K0SCTL_DIR_BAK:=backup}"
 RES="$(pwd)/${K0SCTL_DIR_RES:-restore}"
 latest="${PREFIX_BAK:=k0s_backup}_latest"
 
