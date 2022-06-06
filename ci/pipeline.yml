@@ -34,13 +34,13 @@ resources:
       days:
         - Sunday
 
-  - name: k0sctl-image
+  - name: k0sctl
     icon: lambda
     type: registry-image
     source:
       repository: omegasquad82/k0sctl-handler
 
-  - name: send-email
+  - name: email
     icon: email-alert
     type: email
     source:
@@ -53,7 +53,7 @@ resources:
       to: [((email.from))] #  be silly ;c)
 
 shell_task: &shell_task
-  image: k0sctl-image
+  image: k0sctl
   config: &shell_config
     platform: linux
     inputs:
@@ -64,7 +64,7 @@ shell_task: &shell_task
 
 k0sctl_task: &k0sctl_task
   task: k0sctl
-  image: k0sctl-image
+  image: k0sctl
   config: &k0sctl_config
     platform: linux
     inputs:
@@ -79,7 +79,7 @@ k0sctl_task: &k0sctl_task
       - name: backup
       - name: config
     params: &k0sctl_params
-      DISABLE_TELEMETRY: false
+      DISABLE_TELEMETRY: ((k0sctl.no_telemetry))
       K0SCTL_DIR_BAK: backup
       K0SCTL_DIR_CFG: config
       K0SCTL_DIR_LOG: auditlog
@@ -106,7 +106,7 @@ jobs:
                 trigger: true
               - get: config
                 trigger: true
-              - get: k0sctl-image
+              - get: k0sctl
           - <<: *shell_task
             task: discover
             config:
@@ -120,7 +120,7 @@ jobs:
                     . common.sh
                     tracerouteSSH config/k0sctl.yaml
         on_failure: &notify_failure
-          put: send-email
+          put: email
           inputs:
             - auditlog
           params:
@@ -139,7 +139,7 @@ jobs:
               - get: config
                 trigger: true
                 passed: [ping]
-              - get: k0sctl-image
+              - get: k0sctl
           - <<: *k0sctl_task
             params:
               <<: *k0sctl_params
@@ -147,7 +147,7 @@ jobs:
         on_failure:
           <<: *notify_failure
         on_success: &notify_success
-          put: send-email
+          put: email
           inputs:
             - auditlog
           params:
@@ -161,7 +161,7 @@ jobs:
     plan:
       - in_parallel:
           - get: config
-          - get: k0sctl-image
+          - get: k0sctl
       - <<: *shell_task
         task: prepare
         config:
@@ -193,7 +193,7 @@ jobs:
               - get: config
                 trigger: true
                 passed: [install]
-              - get: k0sctl-image
+              - get: k0sctl
           - <<: *k0sctl_task
             params:
               <<: *k0sctl_params
@@ -217,7 +217,7 @@ jobs:
                 resource: backup
               - get: config
                 passed: [ping]
-              - get: k0sctl-image
+              - get: k0sctl
           - <<: *k0sctl_task
             params:
               <<: *k0sctl_params
@@ -235,7 +235,7 @@ jobs:
           - in_parallel:
               - get: config
                 passed: [install]
-              - get: k0sctl-image
+              - get: k0sctl
           - <<: *k0sctl_task
             params:
               <<: *k0sctl_params
