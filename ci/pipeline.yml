@@ -120,7 +120,7 @@ jobs:
 
   # https://docs.k0sproject.io/latest/k0sctl-install/#install-using-k0sctl
   - name: install
-    serial: true
+    serial_groups: [k0sctl]
     plan:
       - do:
           - in_parallel:
@@ -129,6 +129,8 @@ jobs:
               - get: config
                 trigger: true
                 passed: [ping]
+              - get: restore
+                resource: backup
               - get: k0sctl
           - <<: *k0sctl_task
             params:
@@ -171,7 +173,7 @@ jobs:
             force: true # drop
             repository: config
   - name: backup
-    serial: true
+    serial_groups: [k0sctl]
     plan:
       - do:
           - in_parallel:
@@ -196,33 +198,15 @@ jobs:
           <<: *notify_failure
         on_success:
           <<: *notify_success
-  - name: restore
-    serial: true
-    plan:
-      - do:
-          - in_parallel:
-              - get: restore
-                resource: backup
-              - get: config
-                passed: [ping]
-              - get: k0sctl
-          - <<: *k0sctl_task
-            params:
-              <<: *k0sctl_params
-              K0SCTL_CMD_NAME: restore
-        on_failure:
-          <<: *notify_failure
-        on_success:
-          <<: *notify_success
 
   # https://docs.k0sproject.io/latest/reset/#uninstall-a-k0s-cluster-using-k0sctl
   - name: uninstall
-    serial: true
+    serial_groups: [k0sctl]
     plan:
       - do:
           - in_parallel:
               - get: config
-                passed: [install]
+                passed: [ping]
               - get: k0sctl
           - <<: *k0sctl_task
             params:
