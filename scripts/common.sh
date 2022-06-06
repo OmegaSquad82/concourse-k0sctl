@@ -15,7 +15,7 @@ case $(readlink /proc/$$/exe) in
 	;;
 esac
 
-function checkDir() {
+function assertDir() {
 	local dir="${1:?'Please specify a directory!'}"
 	if [ ! -d "$dir" ]; then
 		echo "$dir not found"
@@ -23,7 +23,7 @@ function checkDir() {
 	fi
 }
 
-function checkFile() {
+function assertFile() {
 	local file="${1:?'Please specify a file!'}"
 	if [ ! -s "$file" ]; then
 		echo "$file not found"
