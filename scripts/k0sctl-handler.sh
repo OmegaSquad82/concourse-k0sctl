@@ -3,7 +3,7 @@
 source "${0%/*}"/common.sh
 
 printHeading 'k0sctl handler'
-case "${K0SCTL_CMD_NAME-version}" in
+case "${K0SCTL_CMD_NAME:-version}" in
 version)
 	runCMD k0sctl version
 	exit 0 # buildx test
@@ -28,7 +28,7 @@ assertDir "$LOG"
 
 BAK="$(pwd)/${K0SCTL_DIR_BAK:-backup}"
 RES="$(pwd)/${K0SCTL_DIR_RES:-restore}"
-latest="${PREFIX_BAK:-k0s_backup}_latest"
+latest="${PREFIX_BAK:=k0s_backup}_latest"
 
 printHeading 'managing cluster'
 cd "$HOME" || exit 2 # ENOENT
@@ -36,7 +36,7 @@ started="$(date +%F-%H-%M-%S)"
 case "$K0SCTL_CMD_NAME" in
 install)
 	# shellcheck disable=SC2086
-	runCMD k0sctl apply --config "$CFG" ${K0SCTL_CMD_ARGS:-}
+	runCMD k0sctl apply --config "$CFG" ${K0SCTL_CMD_ARGS:=}
 	;;
 uninstall)
 	# shellcheck disable=SC2086
