@@ -129,6 +129,8 @@ jobs:
               - get: config
                 trigger: true
                 passed: [ping]
+              - get: restore
+                resource: backup
               - get: k0sctl
           - <<: *k0sctl_task
             params:
@@ -192,24 +194,6 @@ jobs:
               params:
                 rebase: true
                 repository: backup
-        on_failure:
-          <<: *notify_failure
-        on_success:
-          <<: *notify_success
-  - name: restore
-    serial: true
-    plan:
-      - do:
-          - in_parallel:
-              - get: restore
-                resource: backup
-              - get: config
-                passed: [ping]
-              - get: k0sctl
-          - <<: *k0sctl_task
-            params:
-              <<: *k0sctl_params
-              K0SCTL_CMD_NAME: restore
         on_failure:
           <<: *notify_failure
         on_success:
