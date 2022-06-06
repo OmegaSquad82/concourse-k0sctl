@@ -206,7 +206,7 @@ jobs:
       - do:
           - in_parallel:
               - get: config
-                passed: [install]
+                passed: [ping]
               - get: k0sctl
           - <<: *k0sctl_task
             params:
