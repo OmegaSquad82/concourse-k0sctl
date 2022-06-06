@@ -22,11 +22,11 @@ resources:
     source:
       interval: 1h
 
-  - name: once-daily
+  - name: daily
     icon: clock-check
     type: time
 
-  - name: weekly-sundays
+  - name: weekly
     icon: clock-check
     type: time
     source:
@@ -94,6 +94,10 @@ jobs:
           - in_parallel:
               - get: hourly
                 trigger: true
+              - get: daily
+                trigger: true
+              - get: weekly
+                trigger: true
               - get: config
                 trigger: true
               - get: k0sctl
@@ -124,7 +128,7 @@ jobs:
     plan:
       - do:
           - in_parallel:
-              - get: once-daily
+              - get: daily
                 trigger: true
               - get: config
                 trigger: true
@@ -177,7 +181,7 @@ jobs:
     plan:
       - do:
           - in_parallel:
-              - get: weekly-sundays
+              - get: weekly
                 trigger: true
               - get: restore
                 resource: backup
