@@ -170,7 +170,6 @@ jobs:
           params:
             force: true # drop
             repository: config
-            branch: ((repo.k0s.backup.branch))
   - name: backup
     serial: true
     plan:
@@ -193,7 +192,6 @@ jobs:
               params:
                 rebase: true
                 repository: backup
-                branch: ((repo.k0s.backup.branch))
         on_failure:
           <<: *notify_failure
         on_success:
