@@ -34,9 +34,9 @@ cd "$HOME" || exit 2 # ENOENT
 started="$(date +%F-%H-%M-%S)"
 function finish() {
 	local logfile="$LOG/$started-$K0SCTL_CMD_NAME.${SUFFIX_LOG:-log}"
-	if [ -s ~/.cache/k0sctl/k0sctl.log ]; then
+	if [ -s "${K0SCTL_LOG_PATH:="$HOME/.cache/k0sctl/k0sctl.log"}" ]; then
 		printHeading 'saving logfile'
-		runCMD mv ~/.cache/k0sctl/k0sctl.log "$logfile"
+		runCMD mv "$K0SCTL_LOG_PATH" "$logfile"
 	fi
 }
 trap finish EXIT
