@@ -68,15 +68,6 @@ function prepareGIT() {
 	runCMD git config --global user.name "$git_name"
 }
 
-function cloneGitRepo() {
-	printHeading 'cloning git repository'
-	local clonerepo="${1:?'Please specify source repository!'}"
-	local dest_repo="${2:?'Please specify target repository!'}"
-	local user_name="${3:-"${HOME##*/}"}" # should be root
-	runCMD chown -R "$user_name" "$dest_repo"
-	runCMD git clone "$clonerepo" "$dest_repo"
-}
-
 function initBranch() {
 	printHeading 'preparing ophaned git branch'
 	local branchName="${1:?'Please specify a branch name!'}"
@@ -84,13 +75,6 @@ function initBranch() {
 	runCMD git rm --cached -r . || true
 	runCMD git clean -df .??* . || true
 	runCMD git commit --allow-empty -m "init"
-}
-
-function commitAllFiles() {
-	printHeading 'committing to repository'
-	local message="${1:?'Please specify a commit message!'}"
-	runCMD git add .
-	runCMD git commit -m "$message"
 }
 
 function tracerouteSSH() {

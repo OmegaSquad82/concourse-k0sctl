@@ -62,7 +62,7 @@ backup)
 	# shellcheck disable=SC2086
 	runCMD k0sctl backup --config "$CFG" ${K0SCTL_CMD_ARGS:-}
 	printHeading 'saving backup archive'
-	cloneGitRepo "$RES" "$BAK" "${HOME##*/}"
+	runCMD git clone "$RES" "$BAK"
 	prepareGIT "$BAK" "$MAILBOX"
 	runCMD git checkout "${K0SCTL_DIR_BAK}"
 	mapfile -t archives < <(find "$HOME" -maxdepth 1 -name "${PREFIX_BAK}*${SUFFIX_BAK:-tar.gz}")
@@ -71,7 +71,8 @@ backup)
 		archive="${archiveHome##*/}"
 		runCMD mv -n "$archiveHome" -t "$BAK"
 		runCMD ln -sb "$archive" -T "$latest"
-		commitAllFiles "$archive saved as $latest"
+		runCMD git add .
+		runCMD git commit -m "$archive saved as $latest"
 	done
 	;;
 *)
