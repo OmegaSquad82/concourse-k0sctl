@@ -80,16 +80,6 @@ k0sctl_task: &k0sctl_task
       - name: config
     params: &k0sctl_params
       DISABLE_TELEMETRY: ((k0sctl.no_telemetry))
-      K0SCTL_DIR_BAK: backup
-      K0SCTL_DIR_CFG: config
-      K0SCTL_DIR_LOG: auditlog
-      K0SCTL_DIR_RES: restore
-      K0SCTL_CFG_PATH: k0sctl.yaml
-      K0SCTL_CMD_NAME: ""
-      K0SCTL_CMD_ARGS: ""
-      PREFIX_BAK: k0s_backup
-      SUFFIX_BAK: tar.gz
-      SUFFIX_LOG: log
       MAILBOX: ((host.mail))
       SSH_KEY: ((host._key))
     run:
@@ -173,14 +163,13 @@ jobs:
               - -c
               - |
                 . common.sh
-                prepareGIT config
+                prepareGIT config ((host.mail))
                 initBranch ((repo.k0s.backup.branch))
         on_success:
           put: backup
           params:
             force: true # drop
             repository: config
-            branch: ((repo.k0s.backup.branch))
   - name: backup
     serial: true
     plan:
@@ -203,7 +192,6 @@ jobs:
               params:
                 rebase: true
                 repository: backup
-                branch: ((repo.k0s.backup.branch))
         on_failure:
           <<: *notify_failure
         on_success:
