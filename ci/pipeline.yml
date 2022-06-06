@@ -120,7 +120,7 @@ jobs:
 
   # https://docs.k0sproject.io/latest/k0sctl-install/#install-using-k0sctl
   - name: install
-    serial: true
+    serial_groups: [k0sctl]
     plan:
       - do:
           - in_parallel:
@@ -173,7 +173,7 @@ jobs:
             force: true # drop
             repository: config
   - name: backup
-    serial: true
+    serial_groups: [k0sctl]
     plan:
       - do:
           - in_parallel:
@@ -201,7 +201,7 @@ jobs:
 
   # https://docs.k0sproject.io/latest/reset/#uninstall-a-k0s-cluster-using-k0sctl
   - name: uninstall
-    serial: true
+    serial_groups: [k0sctl]
     plan:
       - do:
           - in_parallel:
