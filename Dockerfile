@@ -14,7 +14,7 @@ RUN apk add --no-cache \
         grep \
         mtr \
         && \
-    case "$TARGETPLATFORM" in \
+    case "${TARGETPLATFORM:-linux/amd64}" in \
     "linux/amd64") K0SCTL_BIN="linux-x64"   K0SCTL_SHA256="0beb8fb539c1f1e796972ed10d13bf5c3d5bb06d3c99a1b3f9a3f23183eaaaff" ;; \
     "linux/arm64") K0SCTL_BIN="linux-arm64" K0SCTL_SHA256="7184ebd3e414caca2361a9c42036c1e6e598626ee2ec3443afed6ed901e3889e" ;; \
     *) echo "platform $TARGETPLATFORM not supported" && exit 1 ;; esac && \
