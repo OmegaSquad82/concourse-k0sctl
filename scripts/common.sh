@@ -71,7 +71,7 @@ function prepareGIT() {
 function initBranch() {
 	printHeading 'preparing ophaned git branch'
 	local branchName="${1:?'Please specify a branch name!'}"
-	runCMD git switch --orphan "$branchName"
+	runCMD git switch --discard-changes --orphan "$branchName"
 	runCMD git rm --cached -r . || true
 	runCMD git clean -df .??* . || true
 	runCMD git commit --allow-empty -m "init"
