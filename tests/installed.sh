@@ -6,6 +6,7 @@ Tools=(
 	chmod
 	curl
 	git
+	grep
 	k0sctl
 	ln
 	mtr

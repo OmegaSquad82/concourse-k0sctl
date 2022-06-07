@@ -1,16 +1,19 @@
+# https://docs.docker.com/ci-cd/github-actions/
 name: buildx ci
 
 on:
   push:
     branches:
       - "main"
+    tags:
+      - "v*"
   pull_request:
     branches:
       - "main"
 
 env:
-  TESTING_TAG: omegasquad82/k0sctl-handler:test
-  RELEASE_TAG: omegasquad82/k0sctl-handler:latest
+  TESTING_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/k0sctl-handler:test
+  RELEASE_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/k0sctl-handler:latest
 
 jobs:
   docker:

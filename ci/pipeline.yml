@@ -9,30 +9,22 @@ resources:
   - name: config
     icon: git
     type: git
-    source: ((repo.k0s.config))
+    source: ((k0sctl.config))
 
   - name: backup
     icon: git
     type: git
-    source: ((repo.k0s.backup))
+    source: ((k0sctl.backup))
 
-  - name: hourly
-    icon: clock-check
+  - name: pingtime
+    icon: check-network
     type: time
-    source:
-      interval: 1h
+    source: ((timer.ping))
 
-  - name: once-daily
-    icon: clock-check
+  - name: backuptime
+    icon: backup-restore
     type: time
-
-  - name: weekly-sundays
-    icon: clock-check
-    type: time
-    source:
-      location: Europe/Berlin
-      days:
-        - Sunday
+    source: ((timer.backup))
 
   - name: k0sctl
     icon: lambda
@@ -43,14 +35,7 @@ resources:
   - name: email
     icon: email-alert
     type: email
-    source:
-      smtp:
-        port: "587" # string
-        host: ((email.host))
-        username: ((secret.email.username))
-        password: ((secret.email.password))
-      from: ((email.dummy)) # don't worry,
-      to: [((email.from))] #  be silly ;c)
+    source: ((email))
 
 shell_task: &shell_task
   image: k0sctl
@@ -58,9 +43,12 @@ shell_task: &shell_task
     platform: linux
     inputs:
       - name: config
+        optional: true
+      - name: restore
+        optional: true
     outputs:
       - name: auditlog
-      - name: config
+      - name: backup
 
 k0sctl_task: &k0sctl_task
   task: k0sctl
@@ -79,9 +67,9 @@ k0sctl_task: &k0sctl_task
       - name: backup
       - name: config
     params: &k0sctl_params
-      DISABLE_TELEMETRY: ((k0sctl.no_telemetry))
-      MAILBOX: ((host.mail))
-      SSH_KEY: ((host._key))
+      DISABLE_TELEMETRY: ((k0sctl.flags.no_telemetry))
+      MAILBOX: ((k0sctl.cluster.mail))
+      SSH_KEY: ((k0sctl.cluster._key))
     run:
       path: k0sctl-handler.sh
 
@@ -92,7 +80,7 @@ jobs:
     plan:
       - do:
           - in_parallel:
-              - get: hourly
+              - get: pingtime
                 trigger: true
               - get: config
                 trigger: true
@@ -108,13 +96,13 @@ jobs:
                   - -c
                   - |
                     . common.sh
-                    tracerouteSSH config/k0sctl.yaml
+                    tracerouteSSH config/*.yaml
         on_failure: &notify_failure
           put: email
           inputs:
             - auditlog
           params:
-            subject_text: "((host.name)): k0sctl execution failed"
+            subject_text: "((k0sctl.cluster.name)): k0sctl execution failed"
             body_text: "please see attachments for further analysis"
             attachment_globs: ["auditlog/*"]
 
@@ -124,8 +112,6 @@ jobs:
     plan:
       - do:
           - in_parallel:
-              - get: once-daily
-                trigger: true
               - get: config
                 trigger: true
                 passed: [ping]
@@ -143,7 +129,7 @@ jobs:
           inputs:
             - auditlog
           params:
-            subject_text: "((host.name)): k0sctl execution succeeded"
+            subject_text: "((k0sctl.cluster.name)): k0sctl execution succeeded"
             body_text: "please see attachments for further analysis"
             attachment_globs: ["auditlog/*"]
 
@@ -152,7 +138,6 @@ jobs:
     serial: true
     plan:
       - in_parallel:
-          - get: config
           - get: k0sctl
       - <<: *shell_task
         task: prepare
@@ -165,19 +150,20 @@ jobs:
               - -c
               - |
                 . common.sh
-                prepareGIT config ((host.mail))
-                initBranch ((repo.k0s.backup.branch))
+                runCMD git init backup
+                prepareGIT backup ((k0sctl.cluster.mail))
+                initBranch ((k0sctl.backup.branch))
         on_success:
           put: backup
           params:
             force: true # drop
-            repository: config
+            repository: backup
   - name: backup
     serial_groups: [k0sctl]
     plan:
       - do:
           - in_parallel:
-              - get: weekly-sundays
+              - get: backuptime
                 trigger: true
               - get: restore
                 resource: backup

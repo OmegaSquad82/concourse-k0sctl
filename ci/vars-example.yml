@@ -1,0 +1,30 @@
+email:
+  smtp:
+    host: <host.address>
+    port: <email.host.port>
+    username: <secrets:email.username>
+    password: <secrets:email.password>
+  from: <email.address.from>
+  to: <email.address.tolist>
+k0sctl:
+  config: <repos.k0s.config>
+  backup: <repos.k0s.backup>
+  cluster:
+    _key: <ssh_private_key>
+    mail: <git_committer_mail>
+    name: <email_alert_subject>
+  flags:
+    no_telemetry: false
+timer:
+  ping:
+    interval: 1h
+  backup:
+    location: Europe/Berlin
+    weekdays:
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+      - Sunday
