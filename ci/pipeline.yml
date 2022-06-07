@@ -16,12 +16,12 @@ resources:
     type: git
     source: ((k0sctl.backup))
 
-  - name: ping-timer
+  - name: ping
     icon: check-network
     type: time
     source: ((timer.ping))
 
-  - name: backup-timer
+  - name: backup
     icon: backup-restore
     type: time
     source: ((timer.backup))
@@ -78,7 +78,7 @@ jobs:
     plan:
       - do:
           - in_parallel:
-              - get: ping-timer
+              - get: ping
                 trigger: true
               - get: config
                 trigger: true
@@ -163,7 +163,7 @@ jobs:
     plan:
       - do:
           - in_parallel:
-              - get: backup-timer
+              - get: backup
                 trigger: true
               - get: restore
                 resource: backup
