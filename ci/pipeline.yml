@@ -150,14 +150,14 @@ jobs:
               - -c
               - |
                 . common.sh
-                runCMD git init nurepo
-                prepareGIT nurepo ((k0sctl.cluster.mail))
+                runCMD git init backup
+                prepareGIT backup ((k0sctl.cluster.mail))
                 initBranch ((k0sctl.backup.branch))
         on_success:
           put: backup
           params:
             force: true # drop
-            repository: nurepo
+            repository: backup
   - name: backup
     serial_groups: [k0sctl]
     plan:
