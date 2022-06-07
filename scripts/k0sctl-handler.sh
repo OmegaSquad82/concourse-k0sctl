@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck source=common.sh
+# shellcheck source=./common.sh
 source "${0%/*}"/common.sh
 
 printHeading 'k0sctl handler'
