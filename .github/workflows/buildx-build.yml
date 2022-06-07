@@ -12,8 +12,8 @@ on:
       - "main"
 
 env:
-  TESTING_TAG: ${{ secrets.DOCKER_HUB_USERNAME }}/k0sctl-handler:test
-  RELEASE_TAG: ${{ secrets.DOCKER_HUB_USERNAME }}/k0sctl-handler:latest
+  TESTING_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/k0sctl-handler:test
+  RELEASE_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/k0sctl-handler:latest
 
 jobs:
   docker:
