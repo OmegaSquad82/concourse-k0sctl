@@ -43,7 +43,9 @@ shell_task: &shell_task
     platform: linux
     inputs:
       - name: config
+        optional: true
       - name: restore
+        optional: true
     outputs:
       - name: auditlog
       - name: backup
