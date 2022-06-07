@@ -152,7 +152,7 @@ jobs:
               - -c
               - |
                 . common.sh
-                runCMD git clone restore backup
+                runCMD git clone --no-checkout restore backup
                 prepareGIT backup ((k0sctl.cluster.mail))
                 runCMD git branch -D ((k0sctl.backup.branch))
                 initBranch ((k0sctl.backup.branch))
