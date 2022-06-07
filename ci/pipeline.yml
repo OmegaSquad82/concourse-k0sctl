@@ -138,8 +138,6 @@ jobs:
     serial: true
     plan:
       - in_parallel:
-          - get: restore
-            resource: backup
           - get: k0sctl
       - <<: *shell_task
         task: prepare
@@ -152,15 +150,14 @@ jobs:
               - -c
               - |
                 . common.sh
-                runCMD git clone --no-checkout restore backup
-                prepareGIT backup ((k0sctl.cluster.mail))
-                runCMD git branch -D ((k0sctl.backup.branch))
+                runCMD git init nurepo
+                prepareGIT nurepo ((k0sctl.cluster.mail))
                 initBranch ((k0sctl.backup.branch))
         on_success:
           put: backup
           params:
             force: true # drop
-            repository: backup
+            repository: nurepo
   - name: backup
     serial_groups: [k0sctl]
     plan:
