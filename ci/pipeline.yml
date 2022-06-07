@@ -43,9 +43,10 @@ shell_task: &shell_task
     platform: linux
     inputs:
       - name: config
+      - name: restore
     outputs:
       - name: auditlog
-      - name: config
+      - name: backup
 
 k0sctl_task: &k0sctl_task
   task: k0sctl
@@ -135,7 +136,8 @@ jobs:
     serial: true
     plan:
       - in_parallel:
-          - get: config
+          - get: restore
+            resource: backup
           - get: k0sctl
       - <<: *shell_task
         task: prepare
@@ -148,13 +150,14 @@ jobs:
               - -c
               - |
                 . common.sh
-                prepareGIT config ((k0sctl.cluster.mail))
+                runCMD git clone restore backup
+                prepareGIT backup ((k0sctl.cluster.mail))
                 initBranch ((k0sctl.backup.branch))
         on_success:
           put: backup
           params:
             force: true # drop
-            repository: config
+            repository: backup
   - name: backup
     serial_groups: [k0sctl]
     plan:
