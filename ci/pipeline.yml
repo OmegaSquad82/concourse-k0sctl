@@ -96,7 +96,7 @@ jobs:
                   - -c
                   - |
                     . common.sh
-                    tracerouteSSH config/k0sctl.yaml
+                    tracerouteSSH config/*.yaml
         on_failure: &notify_failure
           put: email
           inputs:
