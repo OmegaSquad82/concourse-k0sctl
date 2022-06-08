@@ -62,7 +62,7 @@ backup)
 	# shellcheck disable=SC2086
 	runCMD k0sctl backup --config "$CFG" ${K0SCTL_CMD_ARGS:-}
 	printHeading 'saving backup archive'
-	cd "$BAK"
+	cd "$BAK" || (echo "$BAK does not exist" && exit 2) # ENOENT
 	mapfile -t archives < <(find "$HOME" -maxdepth 1 -name "${K0SCTL_PREFIX_BAK}*${K0SCTL_SUFFIX_BAK:-tar.gz}")
 	for archiveHome in "${archives[@]}"; do
 		assertFile "$archiveHome"
