@@ -42,13 +42,15 @@ shell_task: &shell_task
   config: &shell_config
     platform: linux
     inputs:
+      - name: backup
+        optional: true
       - name: config
         optional: true
       - name: restore
         optional: true
     outputs:
       - name: auditlog
-      - name: backup
+      - name: backuprepo
 
 k0sctl_task: &k0sctl_task
   task: k0sctl
@@ -68,8 +70,7 @@ k0sctl_task: &k0sctl_task
       - name: config
     params: &k0sctl_params
       DISABLE_TELEMETRY: ((k0sctl.flags.no_telemetry))
-      MAILBOX: ((k0sctl.cluster.mail))
-      SSH_KEY: ((k0sctl.cluster._key))
+      K0SCTL_SSH_KEY: ((k0sctl.cluster._key))
     run:
       path: k0sctl-handler.sh
 
@@ -150,14 +151,14 @@ jobs:
               - -c
               - |
                 . common.sh
-                runCMD git init backup
-                prepareGIT backup ((k0sctl.cluster.mail))
-                initBranch ((k0sctl.backup.branch))
+                runCMD git init backuprepo
+                prepareGIT backuprepo "((k0sctl.cluster.mail))"
+                initBranch "((k0sctl.backup.branch))"
         on_success:
           put: backup
           params:
             force: true # drop
-            repository: backup
+            repository: backuprepo
   - name: backup
     serial_groups: [k0sctl]
     plan:
@@ -176,10 +177,29 @@ jobs:
               <<: *k0sctl_params
               K0SCTL_CMD_NAME: backup
             on_success:
-              put: backup
-              params:
-                rebase: true
-                repository: backup
+              do:
+                - <<: *shell_task
+                  task: commit-backup
+                  config:
+                    <<: *shell_config
+                    run:
+                      path: bash
+                      user: root
+                      args:
+                        - -c
+                        - |
+                          . common.sh
+                          BAK="$(pwd)/backup"
+                          runCMD git clone restore backuprepo
+                          prepareGIT backuprepo "((k0sctl.cluster.mail))"
+                          runCMD git checkout "((k0sctl.backup.branch))"
+                          runCMD mv -f "$BAK"/* .
+                          runCMD git add .
+                          runCMD git commit -m "$(cat "$BAK"/.message)"
+                - put: backup
+                  params:
+                    rebase: true
+                    repository: backuprepo
         on_failure:
           <<: *notify_failure
         on_success:
