@@ -39,19 +39,18 @@ It is the main glue between the pipeline and the CLI. It has several environment
 | ----------------- | ------------------------------------------------------------------------------ | -------------------------- |
 | K0SCTL_CMD_NAME   | The action to perform. `backup`, `install`, `uninstall`, `version`             | version                    |
 | DISABLE_TELEMETRY | can be set via the pipeline's `no_telemetry` flag.                             | false                      |
-| SSH_KEY           | the contents of the private key to access the controller and worker nodes      |
-| SSH_TYPE          | the key's name and type                                                        | id_ed25519                 |
+| K0SCTL_SSH_KEY    | the contents of the private key to access the controller and worker nodes.     |
+| K0SCTL_SSH_TYPE   | the key's name and type                                                        | id_ed25519                 |
 | K0SCTL_DIR_CFG    | relative path to a git repository holding the `k0sctl` configuration           | config                     |
 | K0SCTL_CFG_PATH   | relative path below `K0SCTL_DIR_CFG` with the `k0sctl` configuration spec      | k0sctl.yaml                |
 | K0SCTL_DIR_LOG    | relative path where `k0sctl`s log file will be placed on finishing the script. | auditlog                   |
-| K0SCTL_DIR_BAK    | relative path to a git repository for saving backups into                      | backup                     |
-| K0SCTL_DIR_RES    | relative path to a git repository for restoring backups from.                  | restore                    |
-| PREFIX_BAK        | A prefix to recognize `k0sctl`s dated backup archives from.                    | k0s_backup                 |
-| SUFFIX_LOG        | The suffix that will be used to save the final k0scdtl log to.                 | log                        |
+| K0SCTL_DIR_BAK    | relative path to place backups into.                                           | backup                     |
+| K0SCTL_DIR_RES    | relative path to place restoring backups from.                                 | restore                    |
+| K0SCTL_PREFIX_BAK | A prefix to recognize `k0sctl`s dated backup archives from.                    | k0s_backup                 |
+| K0SCTL_SUFFIX_LOG | The suffix that will be used to save the final k0scdtl log to.                 | log                        |
 | K0SCTL_LOG_PATH   | It's the default path where `k0sctl` saves it's full log into.                 | ~/.cache/k0sctl/k0sctl.log |
-| K0SCTL_CMD_ARGS   | A list of arguments to any of k0sctl's commands.                               |                            |
-| MAILBOX           | Will be set as committer's email during saving a backup.                       |
-| SUFFIX_BAK        | The suffix of the backup archive.                                              | tar.gz                     |
+| K0SCTL_CMD_ARGS   | A list of arguments to any of `k0sctl`'s commands.                             |                            |
+| K0SCTL_SUFFIX_BAK | The suffix of the backup archive.                                              | tar.gz                     |
 
 ## Pipeline
 
