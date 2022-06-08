@@ -150,8 +150,8 @@ jobs:
               - |
                 . common.sh
                 runCMD git init backuprepo
-                prepareGIT backuprepo ((k0sctl.cluster.mail))
-                initBranch ((k0sctl.backup.branch))
+                prepareGIT backuprepo "((k0sctl.cluster.mail))"
+                initBranch "((k0sctl.backup.branch))"
         on_success:
           put: backup
           params:
@@ -189,11 +189,11 @@ jobs:
                           . common.sh
                           BAK="$(pwd)/backup"
                           runCMD git clone restore backuprepo
-                          prepareGIT backuprepo "$MAILBOX"
-                          runCMD git checkout ((k0sctl.backup.branch))
+                          prepareGIT backuprepo "((k0sctl.cluster.mail))"
+                          runCMD git checkout "((k0sctl.backup.branch))"
                           runCMD mv -f "$BAK"/* .
                           runCMD git add .
-                          runCMD git commit -m "$archive saved as $latest"
+                          runCMD git commit -m "$(cat "$BAK"/.message)"
                 - put: backup
                   params:
                     rebase: true

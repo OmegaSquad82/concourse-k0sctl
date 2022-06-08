@@ -69,6 +69,7 @@ backup)
 		archive="${archiveHome##*/}"
 		runCMD mv -n "$archiveHome" -t "$BAK"
 		runCMD ln -sb "$archive" -T "$latest"
+		echo "$archive saved as $latest" >.message
 	done
 	;;
 *)
