@@ -42,6 +42,8 @@ shell_task: &shell_task
   config: &shell_config
     platform: linux
     inputs:
+      - name: backup
+        optional: true
       - name: config
         optional: true
       - name: restore
