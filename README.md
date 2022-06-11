@@ -63,7 +63,7 @@ parameters, listed in the order of appearance:
 | K0SCTL_PREFIX_BAK | A prefix to recognize `k0sctl`s dated backup archives from.                    | k0s_backup                 |
 | K0SCTL_SUFFIX_LOG | The suffix that will be used to save the final k0scdtl log to.                 | log                        |
 | K0SCTL_LOG_PATH   | It's the default path where `k0sctl` saves it's full log into.                 | ~/.cache/k0sctl/k0sctl.log |
-| K0SCTL_SUFFIX_BAK | The suffix of the backup archive.                                              | tar.gz                     |
+| K0SCTL_SUFFIX_BAK | The suffix of the backup archive.                                              | b64                        |
 
 ## Pipeline
 

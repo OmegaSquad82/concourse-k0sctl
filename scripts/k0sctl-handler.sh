@@ -30,7 +30,6 @@ BAK="$(pwd)/${K0SCTL_DIR_BAK:=backup}"
 RES="$(pwd)/${K0SCTL_DIR_RES:-restore}"
 latest="${K0SCTL_PREFIX_BAK:=k0s_backup}_latest"
 
-cd "$HOME" || exit 2 # ENOENT
 started="$(date +%F-%H-%M-%S)"
 function finish() {
   local logfile="$LOG/$started-$K0SCTL_CMD_NAME.${K0SCTL_SUFFIX_LOG:-log}"
@@ -45,32 +44,27 @@ printHeading 'managing cluster'
 case "$K0SCTL_CMD_NAME" in
 install)
   if [ -d "$RES" ] && [ -s "$RES/${latest}" ]; then
-    # shellcheck disable=SC2086
-    runCMD k0sctl apply --config "$CFG" --restore-from -
+    assertFile "$RES/secret.gpg"
+    prepareGPG "$K0SCTL_GPG_KEY"
+    password="pass:$(gpg decrypt "$RES/secret.gpg")"
+    openssl enc -aes256 -in "$RES/${latest}" -out - -pass "$password" -d -a -pbkdf2 | k0sctl apply --config "$CFG" --restore-from -
   else
-    # shellcheck disable=SC2086
     runCMD k0sctl apply --config "$CFG"
   fi
   ;;
 uninstall)
-  # shellcheck disable=SC2086
   runCMD k0sctl reset --config "$CFG" --force
   ;;
 backup)
   assertDir "$BAK"
-  assertDir "$RES"
-  # shellcheck disable=SC2086
-  runCMD k0sctl backup --config "$CFG"
-  printHeading 'saving backup archive'
-  cd "$BAK" || (echo "$BAK does not exist" && exit 2) # ENOENT
-  mapfile -t archives < <(find "$HOME" -maxdepth 1 -name "${K0SCTL_PREFIX_BAK}*${K0SCTL_SUFFIX_BAK:-tar.gz}")
-  for archiveHome in "${archives[@]}"; do
-    assertFile "$archiveHome"
-    archive="${archiveHome##*/}"
-    runCMD mv -n "$archiveHome" -t "$BAK"
-    runCMD ln -sb "$archive" -T "$latest"
-    echo "$archive saved as $latest" >.message
-  done
+  assertFile "$RES/secret.gpg"
+  prepareGPG "$K0SCTL_GPG_KEY"
+  password="pass:$(gpg decrypt "$RES/secret.gpg")"
+  archive="${K0SCTL_PREFIX_BAK}_${started}_${K0SCTL_SUFFIX_BAK:-b64}"
+  runCMD k0sctl backup --config "$CFG" --save-path - | openssl enc -aes256 -in - -out "$archive" -pass "$password" -e -a -pbkdf2
+  runCMD ln -s "$archive" -T "$latest"
+  runCMD mv -f "$archive" "$latest" -t "$BAK"
+  echo "$archive saved as $latest" >"$BAK/.message"
   ;;
 *)
   exit 1 # EPERM Operation not permitted
