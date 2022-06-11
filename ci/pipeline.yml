@@ -145,6 +145,8 @@ jobs:
         task: prepare
         config:
           <<: *shell_config
+          params:
+            key_pair: ((k0sctl.cluster.gpg_pair))
           run:
             path: bash
             user: root
@@ -152,9 +154,9 @@ jobs:
               - -c
               - |
                 . common.sh
+                prepareGPG "$key_pair"
                 git config --global init.defaultBranch main
                 git init backuprepo
-                echo "((k0sctl.cluster.gpg_pair))" | gpg --import -
                 prepareGIT backuprepo "((k0sctl.cluster.mail))"
                 initBranch "((k0sctl.backup.branch))" "((k0sctl.cluster.mail))"
         on_success:
@@ -185,6 +187,8 @@ jobs:
                   task: commit-backup
                   config:
                     <<: *shell_config
+                    params:
+                      key_pair: ((k0sctl.cluster.gpg_pair))
                     run:
                       path: bash
                       user: root
@@ -193,8 +197,8 @@ jobs:
                         - |
                           . common.sh
                           BAK="$(pwd)/backup"
+                          prepareGPG "$key_pair"
                           runCMD git clone restore backuprepo
-                          prepareGPG "((k0sctl.cluster.gpg_pair))"
                           prepareGIT backuprepo "((k0sctl.cluster.mail))"
                           runCMD git checkout "((k0sctl.backup.branch))"
                           runCMD mv -f "$BAK"/* .

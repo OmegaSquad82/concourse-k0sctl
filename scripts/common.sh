@@ -89,6 +89,7 @@ function prepareGPG() {
   printFunction 'preparing gnupg'
   local gpg_pair="${1:?'Please specify a gpg key pair!'}"
   echo "$gpg_pair" | gpg --import
+  gpg --list-keys --with-colons | awk -F: '/fpr:/ {print $10":6:"}' | gpg --import-ownertrust
 }
 
 function commitSigned() {

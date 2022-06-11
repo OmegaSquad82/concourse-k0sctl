@@ -45,9 +45,11 @@ case "$K0SCTL_CMD_NAME" in
 install)
   if [ -d "$RES" ] && [ -s "$RES/${latest}" ]; then
     assertFile "$RES/secret.gpg"
-    prepareGPG "$K0SCTL_GPG_KEY"
+    echo "$K0SCTL_GPG_KEY" | gpg --import -
+    gpg --list-keys --with-colons | awk -F: '/fpr:/ {print $10":6:"}' | gpg --import-ownertrust
+    cipher="${K0SCTL_ENC_CIPHER:-chacha20}"
     password="pass:$(gpg decrypt "$RES/secret.gpg")"
-    openssl enc -aes256 -in "$RES/${latest}" -out - -pass "$password" -d -a -pbkdf2 | k0sctl apply --config "$CFG" --restore-from -
+    openssl "$cipher" -in "$RES/${latest}" -pass "$password" -d -a -pbkdf2 | k0sctl apply --config "$CFG" --restore-from -
   else
     runCMD k0sctl apply --config "$CFG"
   fi
@@ -59,9 +61,10 @@ backup)
   assertDir "$BAK"
   assertFile "$RES/secret.gpg"
   prepareGPG "$K0SCTL_GPG_KEY"
+  cipher="${K0SCTL_ENC_CIPHER:-chacha20}"
   password="pass:$(gpg decrypt "$RES/secret.gpg")"
   archive="${K0SCTL_PREFIX_BAK}_${started}_${K0SCTL_SUFFIX_BAK:-b64}"
-  runCMD k0sctl backup --config "$CFG" --save-path - | openssl enc -aes256 -in - -out "$archive" -pass "$password" -e -a -pbkdf2
+  runCMD k0sctl backup --config "$CFG" --save-path - | openssl "$cipher" -out "$archive" -pass "$password" -a -pbkdf2
   runCMD ln -s "$archive" -T "$latest"
   runCMD mv -f "$archive" "$latest" -t "$BAK"
   echo "$archive saved as $latest" >"$BAK/.message"
