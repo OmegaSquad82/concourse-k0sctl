@@ -11,7 +11,7 @@ any other contribution is welcome.
 ## containerimage
 
 The image built with the [Dockerfile][repo-dockerfile] is based on [Alpine Linux
-3.16.0][link-alpine-3.16.0] and the [buildx ci][repo-ci-buildx] workflow has
+3.16.0][link-alpine-release] and the [buildx ci][repo-ci-buildx] workflow has
 been prepared to build it both for `linux/amd64` and `linux/arm64` targets.
 Currently there is a lack in smoke testing during the build and testing
 unfortunately done via the pipeline template. Until this has been corrected it
@@ -32,6 +32,7 @@ still occasionally breaks during tinkering.
 | bash                            | 5.1.16-r2  |
 | curl                            | 7.83.1-r1  |
 | git                             | 2.36.1-r0  |
+| gnupg                           | 2.2.35-r3  |
 | grep                            | 2.36.1-r0  |
 | mtr                             | 0.95-r1    |
 
@@ -127,9 +128,8 @@ repository.
     https://github.com/k0sproject/k0sctl/pull/149/commits/6e7c262904ed05b7068e818954a5091d25504065#diff-2cad3981690f3fb1f7b9494273cb87a7b751a5f3f884b9ad0e6a119d60f2f1a2R25
 [link-concourse]: https://concourse-ci.org/
 [link-k0sproject]: https://k0sproject.io/
-[link-alpine-3.16.0]: https://alpinelinux.org/posts/Alpine-3.16.0-released.html
-[link-alpine-packages]: https://pkgs.alpinelinux.org/packages
-[link-alpine-releases]: https://alpinelinux.org/releases/
+[link-alpine-packages]: https://pkgs.alpinelinux.org/packages?name=&branch=v3.16
+[link-alpine-release]: https://alpinelinux.org/posts/Alpine-3.16.0-released.html
 [link-markdown]: https://devhints.io/markdown
 [repo-ci-buildx]: /.github/workflows/buildx-ci.yml
 [repo-dockerfile]: /Dockerfile

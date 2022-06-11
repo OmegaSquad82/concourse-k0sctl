@@ -10,6 +10,7 @@ RUN apk add --no-cache \
         "bash>=5.1.16-r2" \
         "curl>=7.83.1-r1" \
         "git>=2.36.1-r0" \
+        "gnupg>=2.2.35-r3" \
         "grep>=2.36.1-r0" \
         "mtr>=0.95-r1" \
         && \
