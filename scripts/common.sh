@@ -107,8 +107,7 @@ function initBranch() {
   runCMD git switch --discard-changes --orphan "$branchName"
   runCMD git rm --cached -r . || true
   runCMD git clean -df .??* . || true
-  mkpw 32 | gpg --encrypt --sign --armor --recipient "$recipient" | tee secret.gpg
-  gpg --verify secret.gpg
+  mkpw 32 | gpg --encrypt --sign --armor --recipient "$recipient" | tee secret.gpg || true
   commitSigned "init"
 }
 
