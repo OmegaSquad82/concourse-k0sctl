@@ -86,10 +86,11 @@ function prepareGIT() {
 }
 
 function prepareGPG() {
-  printFunction 'preparing gnupg'
+  printFunction 'preparing gnupg and initialize trustdb'
   local gpg_pair="${1:?'Please specify a gpg key pair!'}"
   echo "$gpg_pair" | gpg --import
   gpg --list-keys --with-colons | awk -F: '/fpr:/ {print $10":6:"}' | gpg --import-ownertrust
+  gpg --check-trustdb
 }
 
 function commitSigned() {
@@ -100,13 +101,14 @@ function commitSigned() {
 }
 
 function initBranch() {
-  printFunction 'preparing ophaned git branch'
+  printFunction 'preparing ophaned git branch with secret'
   local branchName="${1:?'Please specify a branch name!'}"
   local recipient="${2:?'Please specify a recipient!'}"
   runCMD git switch --discard-changes --orphan "$branchName"
   runCMD git rm --cached -r . || true
   runCMD git clean -df .??* . || true
-  mkpw 32 | gpg --encrypt --recipient "$recipient" >secret.gpg
+  mkpw 32 | gpg --encrypt --sign --armor --recipient "$recipient" | tee secret.gpg
+  gpg --verify secret.gpg
   commitSigned "init"
 }
 

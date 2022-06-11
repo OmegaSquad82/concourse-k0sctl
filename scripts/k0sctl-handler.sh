@@ -48,7 +48,7 @@ install)
     echo "$K0SCTL_GPG_KEY" | gpg --import -
     gpg --list-keys --with-colons | awk -F: '/fpr:/ {print $10":6:"}' | gpg --import-ownertrust
     cipher="${K0SCTL_ENC_CIPHER:-chacha20}"
-    password="pass:$(gpg decrypt "$RES/secret.gpg")"
+    password="pass:$(gpg --decrypt "$RES/secret.gpg")"
     openssl "$cipher" -in "$RES/${latest}" -pass "$password" -d -a -pbkdf2 | k0sctl apply --config "$CFG" --restore-from -
   else
     runCMD k0sctl apply --config "$CFG"
@@ -62,7 +62,7 @@ backup)
   assertFile "$RES/secret.gpg"
   prepareGPG "$K0SCTL_GPG_KEY"
   cipher="${K0SCTL_ENC_CIPHER:-chacha20}"
-  password="pass:$(gpg decrypt "$RES/secret.gpg")"
+  password="pass:$(gpg --decrypt "$RES/secret.gpg")"
   archive="${K0SCTL_PREFIX_BAK}_${started}_${K0SCTL_SUFFIX_BAK:-b64}"
   runCMD k0sctl backup --config "$CFG" --save-path - | openssl "$cipher" -out "$archive" -pass "$password" -a -pbkdf2
   runCMD ln -s "$archive" -T "$latest"
