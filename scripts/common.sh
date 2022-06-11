@@ -78,15 +78,15 @@ function prepareGIT() {
   printFunction 'preparing git'
   local repo_path="${1:?'Please specify a git repository!'}"
   local git_mail="${2:-"${MAILBOX:?'Please specify your mail address!'}"}"
-  local git_name="${3:-"${GITNAME:-'http://concourse-ci.org'}"}"
+  local git_name="${3:-"${GITNAME:?'Please specify your user name!'}"}"
   cd "$repo_path" || (echo "$repo_path does not exist" && exit 2) # ENOENT
-  runCMD git config --global --add safe.directory "$(pwd)"
+  git config --global --add safe.directory "$(pwd)"
   runCMD git config --global user.email "$git_mail"
   runCMD git config --global user.name "$git_name"
 }
 
 function prepareGPG() {
-  printFunction 'preparing gnupg and initialize trustdb'
+  printFunction "preparing gnupg and it's trustdb"
   local gpg_pair="${1:?'Please specify a gpg key pair!'}"
   echo "$gpg_pair" | gpg --import
   gpg --list-keys --with-colons | awk -F: '/fpr:/ {print $10":6:"}' | gpg --import-ownertrust
