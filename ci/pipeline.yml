@@ -154,7 +154,7 @@ jobs:
                 . common.sh
                 git config --global init.defaultBranch main
                 git init backuprepo
-                prepareGPG "((k0sctl.cluster.gpg_pair))"
+                echo "((k0sctl.cluster.gpg_pair))" | gpg --import -
                 prepareGIT backuprepo "((k0sctl.cluster.mail))"
                 initBranch "((k0sctl.backup.branch))" "((k0sctl.cluster.mail))"
         on_success:
