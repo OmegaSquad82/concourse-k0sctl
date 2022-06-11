@@ -12,36 +12,36 @@
 name: Anchore Container Scan
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "main" ]
-  schedule:
-    - cron: '26 4 * * 0'
+    push:
+        branches: ["main"]
+    pull_request:
+        # The branches below must be a subset of the branches above
+        branches: ["main"]
+    schedule:
+        - cron: "26 4 * * 0"
 
 permissions:
-  contents: read
+    contents: read
 
 jobs:
-  Anchore-Build-Scan:
-    permissions:
-      contents: read # for actions/checkout to fetch code
-      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status 
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag localbuild/testimage:latest
-    - name: Run the Anchore scan action itself with GitHub Advanced Security code scanning integration enabled
-      uses: anchore/scan-action@ecfd0e98932e57ea8f68f29c4f418fc41a8194db
-      with:
-        image: "localbuild/testimage:latest"
-        acs-report-enable: true
-        fail-build: false
-    - name: Upload Anchore Scan Report
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: results.sarif
+    Anchore-Build-Scan:
+        permissions:
+            contents: read # for actions/checkout to fetch code
+            security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+            actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout the code
+              uses: actions/checkout@v3
+            - name: Build the Docker image
+              run: docker build . --file Dockerfile --tag localbuild/testimage:latest
+            - name: Run the Anchore scan action itself with GitHub Advanced Security code scanning integration enabled
+              uses: anchore/scan-action@ecfd0e98932e57ea8f68f29c4f418fc41a8194db
+              with:
+                  image: "localbuild/testimage:latest"
+                  acs-report-enable: true
+                  fail-build: false
+            - name: Upload Anchore Scan Report
+              uses: github/codeql-action/upload-sarif@v2
+              with:
+                  sarif_file: results.sarif
