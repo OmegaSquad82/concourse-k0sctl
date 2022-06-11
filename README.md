@@ -63,7 +63,6 @@ parameters, listed in the order of appearance:
 | K0SCTL_PREFIX_BAK | A prefix to recognize `k0sctl`s dated backup archives from.                    | k0s_backup                 |
 | K0SCTL_SUFFIX_LOG | The suffix that will be used to save the final k0scdtl log to.                 | log                        |
 | K0SCTL_LOG_PATH   | It's the default path where `k0sctl` saves it's full log into.                 | ~/.cache/k0sctl/k0sctl.log |
-| K0SCTL_CMD_ARGS   | A list of arguments to any of `k0sctl`'s commands.                             |                            |
 | K0SCTL_SUFFIX_BAK | The suffix of the backup archive.                                              | tar.gz                     |
 
 ## Pipeline
@@ -96,16 +95,17 @@ the files retrieved by `config/*.yaml` glob.
 
 #### init
 
-It initializes the `backup` git repository with an empty commit. An existing
-`backup` branch will be overwritten on subsequent builds.
+It initializes the `backup` git repository with an encrypted `secret.gpg` file
+that contains a password to safely store the backups. An existing `backup`
+branch will be overwritten on subsequent builds.
 
 #### install
 
 This Job calls `k0sctl apply` with configuration from the `config` repository
 under it's default path `k0sctl.yaml` (configurable). If a non-empty
-`k0sctl_backup_latest` file exists in the `backup` repository, it will be passed
-to k0sctl, which will restore the cluster's state if and only if it is a
-[fresh][github-k0sctl-restore.go#149l25] installation.
+`k0sctl_backup_latest` file exists in the `backup` repository, it will be
+decrypted and streamed to k0sctl, which will restore the cluster's state if and
+only if it is a [fresh][github-k0sctl-restore.go#149l25] installation.
 
 ![k0sctl restored the cluster state][image-job-install]
 
@@ -115,8 +115,8 @@ Destroys the cluster by calling `k0sctl reset`.
 
 #### backup
 
-Calls `k0sctl backup` and saves it's output archive in the `backup` git
-repository.
+Calls `k0sctl backup` and streams it's output archive into an encrypted file,
+which will be saved in the `backup` git repository. A symlink will be created.
 
 ![k0sctl backup archives][image-git-backups]
 
