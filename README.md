@@ -104,8 +104,9 @@ branch will be overwritten on subsequent builds.
 This Job calls `k0sctl apply` with configuration from the `config` repository
 under it's default path `k0sctl.yaml` (configurable). If a non-empty
 `k0sctl_backup_latest` file exists in the `backup` repository, it will be
-decrypted and streamed to k0sctl, which will restore the cluster's state if and
-only if it is a [fresh][github-k0sctl-restore.go#149l25] installation.
+decrypted with [openssl enc -aes256 -d][link-openssl-enc] and streamed to
+k0sctl, which will restore the cluster's state if and only if it is a
+[fresh][github-k0sctl-restore.go#149l25] installation.
 
 ![k0sctl restored the cluster state][image-job-install]
 
@@ -115,8 +116,10 @@ Destroys the cluster by calling `k0sctl reset`.
 
 #### backup
 
-Calls `k0sctl backup` and streams it's output archive into an encrypted file,
-which will be saved in the `backup` git repository. A symlink will be created.
+Calls `k0sctl backup` and streams it's output archive to [openssl enc -aes256
+-e][link-openssl-enc] and the encrypted data is streamed into a time stamped
+file, which will be saved in the `backup` git repository. A symlink will be
+created to easily access it during the restore operation.
 
 ![k0sctl backup archives][image-git-backups]
 
@@ -133,6 +136,7 @@ which will be saved in the `backup` git repository. A symlink will be created.
 [link-alpine-packages]: https://pkgs.alpinelinux.org/packages?name=&branch=v3.16
 [link-alpine-release]: https://alpinelinux.org/posts/Alpine-3.16.0-released.html
 [link-markdown]: https://devhints.io/markdown
+[link-openssl-enc]: https://www.openssl.org/docs/man1.1.1/man1/enc.html
 [repo-ci-buildx]: /.github/workflows/buildx-ci.yml
 [repo-dockerfile]: /Dockerfile
 [repo-pipeline]: /ci/pipeline.yml
