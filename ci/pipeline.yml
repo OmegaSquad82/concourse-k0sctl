@@ -70,6 +70,7 @@ k0sctl_task: &k0sctl_task
       - name: config
     params: &k0sctl_params
       DISABLE_TELEMETRY: ((k0sctl.flags.no_telemetry))
+      K0SCTL_GPG_KEY: ((k0sctl.cluster.gpg_pair))
       K0SCTL_SSH_KEY: ((k0sctl.cluster._key))
     run:
       path: k0sctl-handler.sh
@@ -152,8 +153,9 @@ jobs:
               - |
                 . common.sh
                 runCMD git init backuprepo
+                prepareGPG "((k0sctl.cluster.gpg_pair))"
                 prepareGIT backuprepo "((k0sctl.cluster.mail))"
-                initBranch "((k0sctl.backup.branch))"
+                initBranch "((k0sctl.backup.branch))" "((k0sctl.cluster.mail))"
         on_success:
           put: backup
           params:
@@ -191,11 +193,11 @@ jobs:
                           . common.sh
                           BAK="$(pwd)/backup"
                           runCMD git clone restore backuprepo
+                          prepareGPG "((k0sctl.cluster.gpg_pair))"
                           prepareGIT backuprepo "((k0sctl.cluster.mail))"
                           runCMD git checkout "((k0sctl.backup.branch))"
                           runCMD mv -f "$BAK"/* .
-                          runCMD git add .
-                          runCMD git commit -m "$(cat "$BAK"/.message)"
+                          commitSigned "$(cat "$BAK"/.message)"
                 - put: backup
                   params:
                     rebase: true
