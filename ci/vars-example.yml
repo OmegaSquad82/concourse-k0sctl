@@ -1,31 +1,38 @@
-email:
-  smtp:
-    host: <host.address>
-    port: <email.host.port>
-    username: <secrets:email.username>
-    password: <secrets:email.password>
-  from: <email.address.from>
-  to: <email.address.tolist>
-k0sctl:
-  config: <repos.k0s.config>
-  backup: <repos.k0s.backup>
-  cluster:
-    _key: <ssh_private_key>
-    mail: <git_committer_mail>
-    name: <email_alert_subject>
-    gpg_pair: <your gpg key pair>
-  flags:
-    no_telemetry: false
-timer:
-  ping:
-    interval: 1h
-  backup:
-    location: Europe/Berlin
-    weekdays:
-      - Monday
-      - Tuesday
-      - Wednesday
-      - Thursday
-      - Friday
-      - Saturday
-      - Sunday
+jobs:
+  - name: kubernetes
+    serial: true
+    plan:
+      - get: k0sctl
+        trigger: true
+      - set_pipeline: cluster
+        file: k0sctl/ci/pipeline.yml
+        team: kubernetes
+        vars:
+          email:
+            smtp:
+              host: <host.address>
+              port: "<email.host.port>" # string!
+              username: <secrets:email.username>
+              password: <secrets:email.password>
+            from: <email.address.from>
+            to: <email.address.tolist>
+          k0sctl:
+            config: <repos.k0s.config>
+            backup: <repos.k0s.backup>
+            cluster:
+              _key: <secrets:ssh_private_key>
+              gpg_pair: <secrets:your secret gpg key>
+              mail: <git_committer_mail>
+              name: <email_alert_subject>
+            flags:
+              no_telemetry: false
+          timer:
+            ping:
+              interval: 1h
+            backup:
+              location: Europe/London
+              weekdays:
+                - Monday
+                - Wednesday
+                - Friday
+                - Sunday
