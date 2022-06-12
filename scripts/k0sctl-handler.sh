@@ -10,14 +10,14 @@ version)
   ;;
 esac
 
-printHeading 'preparing environment'
+printFunction 'preparing environment'
 case "${DISABLE_TELEMETRY:-false}" in
 true) ;;
 *)
   DISABLE_TELEMETRY=false
   ;;
 esac
-env | grep -E '(K0SCTL|TELEMETRY)' | grep -v 'SSH'
+env | grep -E '(K0SCTL|TELEMETRY)' | grep -Ev '(KEY|SSH)'
 prepareSSH "$K0SCTL_SSH_KEY" "${K0SCTL_SSH_TYPE:-id_ed25519}"
 
 CFG="$(pwd)/${K0SCTL_DIR_CFG:-config}/${K0SCTL_CFG_PATH:-k0sctl.yaml}"
@@ -34,13 +34,13 @@ started="$(date +%F-%H-%M-%S)"
 function finish() {
   local logfile="$LOG/$started-$K0SCTL_CMD_NAME.${K0SCTL_SUFFIX_LOG:-log}"
   if [ -s "${K0SCTL_LOG_PATH:="$HOME/.cache/k0sctl/k0sctl.log"}" ]; then
-    printHeading 'saving logfile'
+    printFunction 'saving logfile'
     runCMD mv "$K0SCTL_LOG_PATH" "$logfile"
   fi
 }
 trap finish EXIT
 
-printHeading 'managing cluster'
+printFunction 'managing cluster'
 case "$K0SCTL_CMD_NAME" in
 install)
   if [ -d "$RES" ] && [ -s "$RES/${latest}" ]; then
