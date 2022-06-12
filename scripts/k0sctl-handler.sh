@@ -45,8 +45,7 @@ case "$K0SCTL_CMD_NAME" in
 install)
   if [ -d "$RES" ] && [ -s "$RES/${latest}" ]; then
     assertFile "$RES/secret.gpg"
-    echo "$K0SCTL_GPG_KEY" | gpg --import -
-    gpg --list-keys --with-colons | awk -F: '/fpr:/ {print $10":6:"}' | gpg --import-ownertrust
+    prepareGPG "$K0SCTL_GPG_KEY"
     cipher="${K0SCTL_ENC_CIPHER:-chacha20}"
     password="pass:$(gpg --decrypt "$RES/secret.gpg")"
     openssl "$cipher" -in "$RES/${latest}" -pass "$password" -d -a -pbkdf2 | k0sctl apply --config "$CFG" --restore-from -
@@ -61,13 +60,18 @@ backup)
   assertDir "$BAK"
   assertFile "$RES/secret.gpg"
   prepareGPG "$K0SCTL_GPG_KEY"
+  runCMD k0sctl backup --config "$CFG"
   cipher="${K0SCTL_ENC_CIPHER:-chacha20}"
   password="pass:$(gpg --decrypt "$RES/secret.gpg")"
-  archive="${K0SCTL_PREFIX_BAK}_${started}_${K0SCTL_SUFFIX_BAK:-b64}"
-  runCMD k0sctl backup --config "$CFG" --save-path - | openssl "$cipher" -out "$archive" -pass "$password" -a -pbkdf2
-  runCMD ln -s "$archive" -T "$latest"
-  runCMD mv -f "$archive" "$latest" -t "$BAK"
-  echo "$archive saved as $latest" >"$BAK/.message"
+  mapfile -t archives < <(find "$(PWD)" -maxdepth 1 -name "${K0SCTL_PREFIX_BAK}*${K0SCTL_SUFFIX_BAK:-tar.gz}")
+  for archiveHome in "${archives[@]}"; do
+    assertFile "$archiveHome"
+    archive="${archiveHome##*/}"
+    openssl "$cipher" -in "$archive" -out "$archive".b64 -pass "$password" -a -pbkdf2
+    runCMD ln -s "$archive".b64 -T "$latest"
+    runCMD mv -n "$archive".b64 "$latest" -t "$BAK"
+    echo "$archive.b64 saved as $latest" >"$BAK/.message"
+  done
   ;;
 *)
   exit 1 # EPERM Operation not permitted
