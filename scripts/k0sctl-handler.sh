@@ -63,7 +63,7 @@ backup)
   runCMD k0sctl backup --config "$CFG"
   cipher="${K0SCTL_ENC_CIPHER:-chacha20}"
   password="pass:$(gpg --decrypt "$RES/secret.gpg")"
-  mapfile -t archives < <(find "$(PWD)" -maxdepth 1 -name "${K0SCTL_PREFIX_BAK}*${K0SCTL_SUFFIX_BAK:-tar.gz}")
+  mapfile -t archives < <(find "$(pwd)" -maxdepth 1 -name "${K0SCTL_PREFIX_BAK}*${K0SCTL_SUFFIX_BAK:-tar.gz}")
   for archiveHome in "${archives[@]}"; do
     assertFile "$archiveHome"
     archive="${archiveHome##*/}"
