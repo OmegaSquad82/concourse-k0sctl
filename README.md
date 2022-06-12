@@ -95,6 +95,7 @@ An example parametrization is in [var-example.yml][repo-pipeline-vars].
 | k0sctl.config             | git                      | repository with `k0sctl` configuration     |
 | k0sctl.backup             | git                      | repository to backup/restore cluster state |
 | k0sctl.cluster.\_key      | string                   | private SSH key                            |
+| k0sctl.cluster.gpg_pair   | string                   | private GPG key                            |
 | k0sctl.cluster.mail       | string                   | committer's email address for backups      |
 | k0sctl.cluster.name       | string                   | email alert subject preamble               |
 | k0sctl.flags.no_telemetry | boolean                  | wether `k0sctl` should call home           |
