@@ -46,7 +46,7 @@ install)
   if [ -d "$RES" ] && [ -s "$RES/${latest}" ]; then
     assertFile "$RES/secret.gpg"
     prepareGPG "$K0SCTL_GPG_KEY"
-    cipher="${K0SCTL_ENC_CIPHER:-chacha20}"
+    cipher="${K0SCTL_ENC_CIPHER:=chacha20}"
     printFunction "decrypting $RES/secret.gpg"
     password="pass:$(gpg --decrypt "$RES/secret.gpg")"
     printFunction "openssl $cipher -in $RES/${latest}"
@@ -63,8 +63,8 @@ backup)
   assertDir "$BAK"
   assertFile "$RES/secret.gpg"
   prepareGPG "$K0SCTL_GPG_KEY"
+  cipher="${K0SCTL_ENC_CIPHER}"
   runCMD k0sctl backup --config "$CFG"
-  cipher="${K0SCTL_ENC_CIPHER:-chacha20}"
   printFunction "decrypting $RES/secret.gpg"
   password="pass:$(gpg --decrypt "$RES/secret.gpg")"
   mapfile -t archives < <(find "$(pwd)" -maxdepth 1 -name "${K0SCTL_PREFIX_BAK}*${K0SCTL_SUFFIX_BAK:-tar.gz}")

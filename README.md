@@ -73,7 +73,9 @@ parameters, listed in the order of appearance:
 | K0SCTL_PREFIX_BAK | A prefix to recognize `k0sctl`s dated backup archives from.                    | k0s_backup                 |
 | K0SCTL_SUFFIX_LOG | The suffix that will be used to save the final k0scdtl log to.                 | log                        |
 | K0SCTL_LOG_PATH   | It's the default path where `k0sctl` saves it's full log into.                 | ~/.cache/k0sctl/k0sctl.log |
-| K0SCTL_SUFFIX_BAK | The suffix of the backup archive.                                              | b64                        |
+| K0SCTL_GPG_KEY    | a gpg key pair to encrypt values with | |
+| K0SCTL_ENC_CIPHER | the cipher for crypto ops on backups | chacha20 |
+| K0SCTL_SUFFIX_BAK | The suffix of the backup archive. | tar.gz |
 
 ## Pipeline
 
@@ -109,6 +111,8 @@ It initializes the `backup` git repository with an encrypted `secret.gpg` file
 that contains a password to safely store the backups. An existing `backup`
 branch will be overwritten on subsequent builds.
 
+![the init Job created a branch with an encrypted password][image-job-init]
+
 #### install
 
 This Job calls `k0sctl apply` with configuration from the `config` repository
@@ -136,6 +140,7 @@ created to easily access it during the restore operation.
 ---
 
 [image-git-backups]: /images/git-backups.png
+[image-job-init]: /images/git-init.png
 [image-job-install]: /images/job-install-restoring.png
 [image-pipeline]: /images/pipeline.png
 [github-k0sctl]: https://github.com/k0sproject/k0sctl
