@@ -122,9 +122,9 @@ branch will be overwritten on subsequent builds.
 This Job calls `k0sctl apply` with configuration from the `config` repository
 under it's default path `k0sctl.yaml` (configurable). If a non-empty
 `k0sctl_backup_latest` file exists in the `backup` repository, it will be
-decrypted with [openssl enc -aes256 -d][link-openssl-enc] and streamed to
-k0sctl, which will restore the cluster's state if and only if it is a
-[fresh][github-k0sctl-restore.go#149l25] installation.
+decrypted with [openssl enc][link-openssl-enc] handed over to k0sctl, which will
+restore the cluster's state if and only if it is a [new][github-k0sctl-restore]
+installation.
 
 ![k0sctl restored the cluster state][image-job-install]
 
@@ -134,10 +134,10 @@ Destroys the cluster by calling `k0sctl reset`.
 
 #### backup
 
-Calls `k0sctl backup` and streams it's output archive to [openssl enc -aes256
--e][link-openssl-enc] and the encrypted data is streamed into a time stamped
-file, which will be saved in the `backup` git repository. A symlink will be
-created to easily access it during the restore operation.
+Calls `k0sctl backup` and encrypts it's output archive with [openssl
+enc][link-openssl-enc] and the encrypted file will be saved in the `backup` git
+repository. A symlink will be created to easily access it during the restore
+operation.
 
 ![k0sctl backup archives][image-git-backups]
 
@@ -148,7 +148,7 @@ created to easily access it during the restore operation.
 [image-job-install]: /images/job-install-restoring.png
 [image-pipeline]: /images/pipeline.png
 [github-k0sctl]: https://github.com/k0sproject/k0sctl
-[github-k0sctl-restore.go#149l25]:
+[github-k0sctl-restore]:
   https://github.com/k0sproject/k0sctl/pull/149/commits/6e7c262904ed05b7068e818954a5091d25504065#diff-2cad3981690f3fb1f7b9494273cb87a7b751a5f3f884b9ad0e6a119d60f2f1a2R25
 [link-concourse]: https://concourse-ci.org/
 [link-k0sproject]: https://k0sproject.io/
