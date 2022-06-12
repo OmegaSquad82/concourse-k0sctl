@@ -49,8 +49,9 @@ install)
     cipher="${K0SCTL_ENC_CIPHER:-chacha20}"
     printFunction "decrypting $RES/secret.gpg"
     password="pass:$(gpg --decrypt "$RES/secret.gpg")"
-    printFunction "using 'openssl $cipher' to decrypt $RES/${latest}"
-    openssl "$cipher" -in "$RES/${latest}" -pass "$password" -d -a -pbkdf2 | k0sctl apply --config "$CFG" --restore-from -
+    printFunction "using openssl $cipher to decrypt $RES/${latest}"
+    openssl "$cipher" -in "$RES/${latest}" -out "${latest}" -pass "$password" -d --armor -pbkdf2
+    runCMD k0sctl apply --config "$CFG" --restore-from "${latest}"
   else
     runCMD k0sctl apply --config "$CFG"
   fi
@@ -67,14 +68,14 @@ backup)
   printFunction "decrypting $RES/secret.gpg"
   password="pass:$(gpg --decrypt "$RES/secret.gpg")"
   mapfile -t archives < <(find "$(pwd)" -maxdepth 1 -name "${K0SCTL_PREFIX_BAK}*${K0SCTL_SUFFIX_BAK:-tar.gz}")
-  printFunction "using 'openssl $cipher' to encrypt ${archives[*]}"
+  printFunction "using openssl $cipher to encrypt ${archives[*]}"
   for archiveHome in "${archives[@]}"; do
     assertFile "$archiveHome"
     archive="${archiveHome##*/}"
     openssl "$cipher" -in "$archive" -out "$archive".b64 -pass "$password" -a -pbkdf2
     runCMD ln -s "$archive".b64 -T "$latest"
     runCMD mv -n "$archive".b64 "$latest" -t "$BAK"
-    echo "$archive.b64 saved as $latest" >"$BAK/.message"
+    echo "saved $archive.b64 as $latest" >"$BAK/.message"
   done
   ;;
 *)
