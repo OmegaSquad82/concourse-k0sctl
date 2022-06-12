@@ -101,7 +101,7 @@ function commitSigned() {
 }
 
 function initBranch() {
-  printFunction 'preparing ophaned git branch with secret'
+  printFunction 'initializing ophaned git branch with secret.gpg'
   local branchName="${1:?'Please specify a branch name!'}"
   local recipient="${2:?'Please specify a recipient!'}"
   runCMD git switch --discard-changes --orphan "$branchName"
