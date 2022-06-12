@@ -20,7 +20,7 @@ esac
 env | grep -E '(K0SCTL|TELEMETRY)' | grep -Ev '(KEY|SSH)'
 prepareSSH "$K0SCTL_SSH_KEY" "${K0SCTL_SSH_TYPE:-id_ed25519}"
 
-CFG="$(pwd)/${K0SCTL_DIR_CFG:-config}/${K0SCTL_CFG_PATH:-k0sctl.yaml}"
+CFG="$(pwd)/${K0SCTL_CFG_PATH:-config/k0sctl.yaml}"
 assertFile "$CFG"
 
 LOG="$(pwd)/${K0SCTL_DIR_LOG:-auditlog}"
@@ -28,6 +28,11 @@ assertDir "$LOG"
 
 BAK="$(pwd)/${K0SCTL_DIR_BAK:=backup}"
 RES="$(pwd)/${K0SCTL_DIR_RES:-restore}"
+assertFile "$RES/secret.gpg"
+prepareGPG "$K0SCTL_GPG_KEY"
+printFunction "decrypting $RES/secret.gpg"
+password="pass:$(gpg --decrypt "$RES/secret.gpg")"
+cipher="${K0SCTL_ENC_CIPHER:-chacha20}"
 latest="${K0SCTL_PREFIX_BAK:=k0s_backup}_latest"
 
 started="$(date +%F-%H-%M-%S)"
@@ -44,11 +49,6 @@ printFunction 'managing cluster'
 case "$K0SCTL_CMD_NAME" in
 install)
   if [ -d "$RES" ] && [ -s "$RES/${latest}" ]; then
-    assertFile "$RES/secret.gpg"
-    prepareGPG "$K0SCTL_GPG_KEY"
-    cipher="${K0SCTL_ENC_CIPHER:=chacha20}"
-    printFunction "decrypting $RES/secret.gpg"
-    password="pass:$(gpg --decrypt "$RES/secret.gpg")"
     printFunction "openssl $cipher -in $RES/${latest}"
     openssl "$cipher" -in "$RES/${latest}" -out "${latest}" -pass "$password" -d -a -pbkdf2
     runCMD k0sctl apply --config "$CFG" --restore-from "${latest}"
@@ -61,12 +61,7 @@ uninstall)
   ;;
 backup)
   assertDir "$BAK"
-  assertFile "$RES/secret.gpg"
-  prepareGPG "$K0SCTL_GPG_KEY"
-  cipher="${K0SCTL_ENC_CIPHER}"
   runCMD k0sctl backup --config "$CFG"
-  printFunction "decrypting $RES/secret.gpg"
-  password="pass:$(gpg --decrypt "$RES/secret.gpg")"
   mapfile -t archives < <(find "$(pwd)" -maxdepth 1 -name "${K0SCTL_PREFIX_BAK}*${K0SCTL_SUFFIX_BAK:-tar.gz}")
   for archiveHome in "${archives[@]}"; do
     assertFile "$archiveHome"
