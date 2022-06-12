@@ -13,6 +13,7 @@ k0sctl:
     _key: <ssh_private_key>
     mail: <git_committer_mail>
     name: <email_alert_subject>
+    gpg_pair: <your gpg key pair>
   flags:
     no_telemetry: false
 timer:
