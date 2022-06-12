@@ -30,6 +30,8 @@ values you're providing to the pipeline as `cluster.name` and `cluster.email`.
 
 These values will be used to both en- and later decrypt the backup _password_ as
 well as sign all _commits_ to the backup git repository during relevant Jobs.
+Please review this [document][link-github-gpg] for more information about commit
+signature verification.
 
 ### inventory
 
@@ -154,6 +156,8 @@ operation.
 [link-k0sproject]: https://k0sproject.io/
 [link-alpine-packages]: https://pkgs.alpinelinux.org/packages?name=&branch=v3.16
 [link-alpine-release]: https://alpinelinux.org/posts/Alpine-3.16.0-released.html
+[link-github-gpg]:
+  https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification#gpg-commit-signature-verification
 [link-gnupg-keygen]:
   https://gnupg.org/documentation/manuals/gnupg/OpenPGP-Key-Management.html#OpenPGP-Key-Management
 [link-markdown]: https://devhints.io/markdown

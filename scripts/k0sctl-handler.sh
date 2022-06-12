@@ -26,14 +26,18 @@ assertFile "$CFG"
 LOG="$(pwd)/${K0SCTL_DIR_LOG:-auditlog}"
 assertDir "$LOG"
 
-BAK="$(pwd)/${K0SCTL_DIR_BAK:=backup}"
-RES="$(pwd)/${K0SCTL_DIR_RES:-restore}"
-assertFile "$RES/secret.gpg"
-prepareGPG "$K0SCTL_GPG_KEY"
-printFunction "decrypting restore/secret.gpg"
-password="pass:$(gpg --decrypt "$RES/secret.gpg")"
-cipher="${K0SCTL_ENC_CIPHER:-chacha20}"
-latest="${K0SCTL_PREFIX_BAK:=k0s_backup}_latest"
+case "${K0SCTL_CMD_NAME}" in
+install | backup)
+  BAK="$(pwd)/${K0SCTL_DIR_BAK:=backup}"
+  RES="$(pwd)/${K0SCTL_DIR_RES:-restore}"
+  assertFile "$RES/secret.gpg"
+  prepareGPG "$K0SCTL_GPG_KEY"
+  printFunction "decrypting restore/secret.gpg"
+  password="pass:$(gpg --decrypt "$RES/secret.gpg")"
+  cipher="${K0SCTL_ENC_CIPHER:-chacha20}"
+  latest="${K0SCTL_PREFIX_BAK:=k0s_backup}_latest"
+  ;;
+esac
 
 started="$(date +%F-%H-%M-%S)"
 function finish() {
