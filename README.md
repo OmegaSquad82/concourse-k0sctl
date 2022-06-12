@@ -21,11 +21,15 @@ still occasionally breaks during tinkering.
 
 Both pipeline and containerimage are being built in my free time and are a fun
 project. In contrary to what the above states it is imperative that you never
-leak any private key data you handle. This product encrypts it's backup. This
-feature cannot be turned off at this point in time. It is required that you
-[generate][link-gnupg-keygen] a gpg key pair with the exact same values you're
-using as `cluster.name` and `cluster.email`, which will be used to both encrypt
-the backup _password_ and sign the _commits_ to the backup git repository.
+leak any private key data you handle. This product encrypts the files created
+with `k0sctl backup`. This feature cannot be turned off at this point in time.
+
+It is required that you [generate][link-gnupg-keygen], and provide via pipeline
+_vars_, a `cluster.gpg_pair` with the exact same Name and Mail, but no Comment,
+values you're providing to the pipeline as `cluster.name` and `cluster.email`.
+
+These values will be used to both en- and later decrypt the backup _password_ as
+well as sign all _commits_ to the backup git repository during relevant Jobs.
 
 ### inventory
 
@@ -73,9 +77,9 @@ parameters, listed in the order of appearance:
 | K0SCTL_PREFIX_BAK | A prefix to recognize `k0sctl`s dated backup archives from.                    | k0s_backup                 |
 | K0SCTL_SUFFIX_LOG | The suffix that will be used to save the final k0scdtl log to.                 | log                        |
 | K0SCTL_LOG_PATH   | It's the default path where `k0sctl` saves it's full log into.                 | ~/.cache/k0sctl/k0sctl.log |
-| K0SCTL_GPG_KEY    | a gpg key pair to encrypt values with | |
-| K0SCTL_ENC_CIPHER | the cipher for crypto ops on backups | chacha20 |
-| K0SCTL_SUFFIX_BAK | The suffix of the backup archive. | tar.gz |
+| K0SCTL_GPG_KEY    | a gpg key pair to encrypt values with                                          |                            |
+| K0SCTL_ENC_CIPHER | the cipher for crypto ops on backups                                           | chacha20                   |
+| K0SCTL_SUFFIX_BAK | The suffix of the backup archive.                                              | tar.gz                     |
 
 ## Pipeline
 
