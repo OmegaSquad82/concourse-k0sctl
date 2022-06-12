@@ -50,7 +50,7 @@ install)
     printFunction "decrypting $RES/secret.gpg"
     password="pass:$(gpg --decrypt "$RES/secret.gpg")"
     printFunction "openssl $cipher -in $RES/${latest}"
-    openssl "$cipher" -in "$RES/${latest}" -out "${latest}" -pass "$password" -d --armor -pbkdf2
+    openssl "$cipher" -in "$RES/${latest}" -out "${latest}" -pass "$password" -d -a -pbkdf2
     runCMD k0sctl apply --config "$CFG" --restore-from "${latest}"
   else
     runCMD k0sctl apply --config "$CFG"
