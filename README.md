@@ -17,6 +17,16 @@ Currently there is a lack in smoke testing during the build and testing
 unfortunately done via the pipeline template. Until this has been corrected it
 still occasionally breaks during tinkering.
 
+## security
+
+Both pipeline and containerimage are being built in my free time and are a fun
+project. In contrary to what the above states it is imperative that you never
+leak any private key data you handle. This product encrypts it's backup. This
+feature cannot be turned off at this point in time. It is required that you
+[generate][link-gnupg-keygen] a gpg key pair with the exact same values you're
+using as `cluster.name` and `cluster.email`, which will be used to both encrypt
+the backup _password_ and sign the _commits_ to the backup git repository.
+
 ### inventory
 
 #### Github
@@ -135,6 +145,8 @@ created to easily access it during the restore operation.
 [link-k0sproject]: https://k0sproject.io/
 [link-alpine-packages]: https://pkgs.alpinelinux.org/packages?name=&branch=v3.16
 [link-alpine-release]: https://alpinelinux.org/posts/Alpine-3.16.0-released.html
+[link-gnupg-keygen]:
+  https://gnupg.org/documentation/manuals/gnupg/OpenPGP-Key-Management.html#OpenPGP-Key-Management
 [link-markdown]: https://devhints.io/markdown
 [link-openssl-enc]: https://www.openssl.org/docs/man1.1.1/man1/enc.html
 [repo-ci-buildx]: /.github/workflows/buildx-ci.yml
