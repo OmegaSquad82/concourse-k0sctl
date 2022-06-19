@@ -33,6 +33,11 @@ well as sign all _commits_ to the backup git repository during relevant Jobs.
 Please review this [document][link-github-gpg] for more information about commit
 signature verification.
 
+## praise
+
+My gratitude to @rstacruz as I'm heavily relying on their cheat sheets for both
+[bash][link-bash] and [markdown][link-markdown] during my day to day work.
+
 ### inventory
 
 #### Github
@@ -159,6 +164,7 @@ operation.
 [github-k0sctl]: https://github.com/k0sproject/k0sctl
 [github-k0sctl-restore]:
   https://github.com/k0sproject/k0sctl/pull/149/commits/6e7c262904ed05b7068e818954a5091d25504065#diff-2cad3981690f3fb1f7b9494273cb87a7b751a5f3f884b9ad0e6a119d60f2f1a2R25
+[link-bash]: https://devhints.io/bash
 [link-concourse]: https://concourse-ci.org/
 [link-k0sproject]: https://k0sproject.io/
 [link-alpine-packages]: https://pkgs.alpinelinux.org/packages?name=&branch=v3.16
