@@ -65,22 +65,22 @@ A few functions used either in the image or the pipeline or both.
 It is the main glue between the pipeline and the CLI. It has several environment
 parameters, listed in the order of appearance:
 
-| Name              | Description                                                                    | Default                    |
-| ----------------- | ------------------------------------------------------------------------------ | -------------------------- |
-| K0SCTL_CMD_NAME   | The action to perform. `backup`, `install`, `uninstall`, `version`             | version                    |
-| DISABLE_TELEMETRY | can be set via the pipeline's `no_telemetry` flag.                             | false                      |
-| K0SCTL_SSH_KEY    | the contents of the private key to access the controller and worker nodes.     |
-| K0SCTL_SSH_TYPE   | the key's name and type                                                        | id_ed25519                 |
-| K0SCTL_CFG_PATH   | relative path below `K0SCTL_DIR_CFG` with the `k0sctl` configuration spec      | config/k0sctl.yaml         |
-| K0SCTL_DIR_LOG    | relative path where `k0sctl`s log file will be placed on finishing the script. | auditlog                   |
-| K0SCTL_DIR_BAK    | relative path to place backups into.                                           | backup                     |
-| K0SCTL_DIR_RES    | relative path to place restoring backups from.                                 | restore                    |
-| K0SCTL_GPG_KEY    | a gpg key pair to encrypt values with                                          |                            |
-| K0SCTL_ENC_CIPHER | the cipher for crypto ops on backups                                           | chacha20                   |
-| K0SCTL_PREFIX_BAK | A prefix to recognize `k0sctl`s dated backup archives from.                    | k0s_backup                 |
-| K0SCTL_SUFFIX_LOG | The suffix that will be used to save the final k0scdtl log to.                 | log                        |
-| K0SCTL_LOG_PATH   | It's the default path where `k0sctl` saves it's full log into.                 | ~/.cache/k0sctl/k0sctl.log |
-| K0SCTL_SUFFIX_BAK | The suffix of the backup archive.                                              | tar.gz                     |
+| Name              | Description                | Default                    |
+| ----------------- | -------------------------- | -------------------------- |
+| K0SCTL_CMD_NAME   | The action to perform.     | version                    |
+| DISABLE_TELEMETRY | Pipeline's `no_telemetry`  | false                      |
+| K0SCTL_SSH_KEY    | private SSH key content    |                            |
+| K0SCTL_SSH_TYPE   | the key's file name        | id_ed25519                 |
+| K0SCTL_CFG_PATH   | to `k0sctl` config spec    | config/k0sctl.yaml         |
+| K0SCTL_DIR_LOG    | to store `k0sctl`'s log    | auditlog                   |
+| K0SCTL_DIR_BAK    | to place backups into.     | backup                     |
+| K0SCTL_DIR_RES    | from where to restore      | restore                    |
+| K0SCTL_GPG_KEY    | to decrypt backup password |                            |
+| K0SCTL_ENC_CIPHER | openssl cipher for backups | chacha20                   |
+| K0SCTL_PREFIX_BAK | Prefix of backup archives  | k0s_backup                 |
+| K0SCTL_SUFFIX_LOG | Final logfile's suffix     | log                        |
+| K0SCTL_LOG_PATH   | `k0sctl` default log path  | ~/.cache/k0sctl/k0sctl.log |
+| K0SCTL_SUFFIX_BAK | Suffix of backup archives  | tar.gz                     |
 
 ## Pipeline
 
@@ -91,18 +91,25 @@ You'll find it's specification in [pipeline.yml][repo-pipeline].
 
 An example parametrization is in [var-example.yml][repo-pipeline-vars].
 
-| path                      | concourse resource type  | description                                |
-| ------------------------- | ------------------------ | ------------------------------------------ |
-| email                     | pcfseceng/email-resource | email alerting parameters                  |
-| k0sctl.config             | git                      | repository with `k0sctl` configuration     |
-| k0sctl.backup             | git                      | repository to backup/restore cluster state |
-| k0sctl.cluster.\_key      | string                   | private SSH key                            |
-| k0sctl.cluster.gpg_pair   | string                   | private GPG key                            |
-| k0sctl.cluster.mail       | string                   | committer's email address for backups      |
-| k0sctl.cluster.name       | string                   | email alert subject preamble               |
-| k0sctl.flags.no_telemetry | boolean                  | wether `k0sctl` should call home           |
-| timer.ping                | time                     | when to execute traceroutes                |
-| timer.backup              | time                     | when to execute backups                    |
+| path         | concourse resource type  | description                 |
+| ------------ | ------------------------ | --------------------------- |
+| email        | pcfseceng/email-resource | email alerting parameters   |
+| timer.ping   | time                     | when to execute traceroutes |
+| timer.backup | time                     | when to execute backups     |
+
+#### k0sctl
+
+Below the `k0sctl` parameter structure you'll find:
+
+| path               | concourse type | description                           |
+| ------------------ | -------------- | ------------------------------------- |
+| config             | git            | place to fetch `k0sctl` configuration |
+| backup             | git            | to backup/restore the cluster state   |
+| cluster.\_key      | string         | private SSH key                       |
+| cluster.gpg_pair   | string         | private GPG key                       |
+| cluster.mail       | string         | committer's email address for backups |
+| cluster.name       | string         | email alert subject preamble          |
+| flags.no_telemetry | boolean        | wether `k0sctl` should call home      |
 
 ### Jobs
 
