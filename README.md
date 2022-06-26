@@ -1,5 +1,7 @@
 # concourse-k0sctl
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/3d2c20609b6a4720b107c7fd31f8c20e)](https://www.codacy.com/gh/OmegaSquad82/concourse-k0sctl/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=OmegaSquad82/concourse-k0sctl&amp;utm_campaign=Badge_Grade)
+
 It's a container image which instruments [k0sctl][github-k0sctl], a CLI to
 manage [k0s][link-k0sproject] Kubernetes clusters. The image currently is
 publicly available on Docker Hub as `omegasquad82/k0sctl-handler`. This project
@@ -33,6 +35,11 @@ well as sign all _commits_ to the backup git repository during relevant Jobs.
 Please review this [document][link-github-gpg] for more information about commit
 signature verification.
 
+## praise
+
+My gratitude to @rstacruz as I'm heavily relying on their cheat sheets for both
+[bash][link-bash] and [markdown][link-markdown] during my day to day work.
+
 ### inventory
 
 #### Github
@@ -65,22 +72,22 @@ A few functions used either in the image or the pipeline or both.
 It is the main glue between the pipeline and the CLI. It has several environment
 parameters, listed in the order of appearance:
 
-| Name              | Description                                                                    | Default                    |
-| ----------------- | ------------------------------------------------------------------------------ | -------------------------- |
-| K0SCTL_CMD_NAME   | The action to perform. `backup`, `install`, `uninstall`, `version`             | version                    |
-| DISABLE_TELEMETRY | can be set via the pipeline's `no_telemetry` flag.                             | false                      |
-| K0SCTL_SSH_KEY    | the contents of the private key to access the controller and worker nodes.     |
-| K0SCTL_SSH_TYPE   | the key's name and type                                                        | id_ed25519                 |
-| K0SCTL_CFG_PATH   | relative path below `K0SCTL_DIR_CFG` with the `k0sctl` configuration spec      | config/k0sctl.yaml         |
-| K0SCTL_DIR_LOG    | relative path where `k0sctl`s log file will be placed on finishing the script. | auditlog                   |
-| K0SCTL_DIR_BAK    | relative path to place backups into.                                           | backup                     |
-| K0SCTL_DIR_RES    | relative path to place restoring backups from.                                 | restore                    |
-| K0SCTL_GPG_KEY    | a gpg key pair to encrypt values with                                          |                            |
-| K0SCTL_ENC_CIPHER | the cipher for crypto ops on backups                                           | chacha20                   |
-| K0SCTL_PREFIX_BAK | A prefix to recognize `k0sctl`s dated backup archives from.                    | k0s_backup                 |
-| K0SCTL_SUFFIX_LOG | The suffix that will be used to save the final k0scdtl log to.                 | log                        |
-| K0SCTL_LOG_PATH   | It's the default path where `k0sctl` saves it's full log into.                 | ~/.cache/k0sctl/k0sctl.log |
-| K0SCTL_SUFFIX_BAK | The suffix of the backup archive.                                              | tar.gz                     |
+| Name              | Description                | Default                    |
+| ----------------- | -------------------------- | -------------------------- |
+| K0SCTL_CMD_NAME   | The action to perform.     | version                    |
+| DISABLE_TELEMETRY | Pipeline's `no_telemetry`  | false                      |
+| K0SCTL_SSH_KEY    | private SSH key content    |                            |
+| K0SCTL_SSH_TYPE   | the key's file name        | id_ed25519                 |
+| K0SCTL_CFG_PATH   | to `k0sctl` config spec    | config/k0sctl.yaml         |
+| K0SCTL_DIR_LOG    | to store `k0sctl`'s log    | auditlog                   |
+| K0SCTL_DIR_BAK    | to place backups into.     | backup                     |
+| K0SCTL_DIR_RES    | from where to restore      | restore                    |
+| K0SCTL_GPG_KEY    | to decrypt backup password |                            |
+| K0SCTL_ENC_CIPHER | openssl cipher for backups | chacha20                   |
+| K0SCTL_PREFIX_BAK | Prefix of backup archives  | k0s_backup                 |
+| K0SCTL_SUFFIX_LOG | Final logfile's suffix     | log                        |
+| K0SCTL_LOG_PATH   | `k0sctl` default log path  | ~/.cache/k0sctl/k0sctl.log |
+| K0SCTL_SUFFIX_BAK | Suffix of backup archives  | tar.gz                     |
 
 ## Pipeline
 
@@ -91,18 +98,25 @@ You'll find it's specification in [pipeline.yml][repo-pipeline].
 
 An example parametrization is in [var-example.yml][repo-pipeline-vars].
 
-| path                      | concourse resource type  | description                                |
-| ------------------------- | ------------------------ | ------------------------------------------ |
-| email                     | pcfseceng/email-resource | email alerting parameters                  |
-| k0sctl.config             | git                      | repository with `k0sctl` configuration     |
-| k0sctl.backup             | git                      | repository to backup/restore cluster state |
-| k0sctl.cluster.\_key      | string                   | private SSH key                            |
-| k0sctl.cluster.gpg_pair   | string                   | private GPG key                            |
-| k0sctl.cluster.mail       | string                   | committer's email address for backups      |
-| k0sctl.cluster.name       | string                   | email alert subject preamble               |
-| k0sctl.flags.no_telemetry | boolean                  | wether `k0sctl` should call home           |
-| timer.ping                | time                     | when to execute traceroutes                |
-| timer.backup              | time                     | when to execute backups                    |
+| path         | concourse resource type  | description                 |
+| ------------ | ------------------------ | --------------------------- |
+| email        | pcfseceng/email-resource | email alerting parameters   |
+| timer.ping   | time                     | when to execute traceroutes |
+| timer.backup | time                     | when to execute backups     |
+
+#### k0sctl
+
+Below the `k0sctl` parameter structure you'll find:
+
+| path               | concourse type | description                           |
+| ------------------ | -------------- | ------------------------------------- |
+| config             | git            | place to fetch `k0sctl` configuration |
+| backup             | git            | to backup/restore the cluster state   |
+| cluster.\_key      | string         | private SSH key                       |
+| cluster.gpg_pair   | string         | private GPG key                       |
+| cluster.mail       | string         | committer's email address for backups |
+| cluster.name       | string         | email alert subject preamble          |
+| flags.no_telemetry | boolean        | wether `k0sctl` should call home      |
 
 ### Jobs
 
@@ -152,6 +166,7 @@ operation.
 [github-k0sctl]: https://github.com/k0sproject/k0sctl
 [github-k0sctl-restore]:
   https://github.com/k0sproject/k0sctl/pull/149/commits/6e7c262904ed05b7068e818954a5091d25504065#diff-2cad3981690f3fb1f7b9494273cb87a7b751a5f3f884b9ad0e6a119d60f2f1a2R25
+[link-bash]: https://devhints.io/bash
 [link-concourse]: https://concourse-ci.org/
 [link-k0sproject]: https://k0sproject.io/
 [link-alpine-packages]: https://pkgs.alpinelinux.org/packages?name=&branch=v3.16
