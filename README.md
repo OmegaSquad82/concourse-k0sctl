@@ -1,5 +1,7 @@
 # concourse-k0sctl
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/de56a91d6da2400db155104dfadbfe74)](https://app.codacy.com/gh/OmegaSquad82/concourse-k0sctl?utm_source=github.com&utm_medium=referral&utm_content=OmegaSquad82/concourse-k0sctl&utm_campaign=Badge_Grade_Settings)
+
 It's a container image which instruments [k0sctl][github-k0sctl], a CLI to
 manage [k0s][link-k0sproject] Kubernetes clusters. The image currently is
 publicly available on Docker Hub as `omegasquad82/k0sctl-handler`. This project
