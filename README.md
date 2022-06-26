@@ -1,3 +1,5 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/3d2c20609b6a4720b107c7fd31f8c20e)](https://www.codacy.com/gh/OmegaSquad82/concourse-k0sctl/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=OmegaSquad82/concourse-k0sctl&amp;utm_campaign=Badge_Grade)
+
 # concourse-k0sctl
 
 It's a container image which instruments [k0sctl][github-k0sctl], a CLI to
