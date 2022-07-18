@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 # https://devhints.io/dockerfile
-FROM alpine:3.16.0 as release
+FROM alpine:3.16.1 as release
 
 ARG TARGETPLATFORM
 ENV K0SCTL_VER="v0.13.0"
