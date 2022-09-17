@@ -3,7 +3,7 @@
 FROM alpine:3.16.2 as release
 
 ARG TARGETPLATFORM
-ENV K0SCTL_VER="v0.13.0"
+ENV K0SCTL_VER="v0.14.0"
 
 SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
 RUN apk add --no-cache \
@@ -17,8 +17,8 @@ RUN apk add --no-cache \
         "openssl>=1.1.1o-r0" \
         && \
     case "${TARGETPLATFORM:-linux/amd64}" in \
-    "linux/amd64") K0SCTL_BIN="linux-x64"   K0SCTL_SHA256="0beb8fb539c1f1e796972ed10d13bf5c3d5bb06d3c99a1b3f9a3f23183eaaaff" ;; \
-    "linux/arm64") K0SCTL_BIN="linux-arm64" K0SCTL_SHA256="7184ebd3e414caca2361a9c42036c1e6e598626ee2ec3443afed6ed901e3889e" ;; \
+    "linux/amd64") K0SCTL_BIN="linux-x64"   K0SCTL_SHA256="7fbe42adb4f775e2f87b4dc46ed97aa7d4c0ce8b9135e799a122a4c2fbec2b59" ;; \
+    "linux/arm64") K0SCTL_BIN="linux-arm64" K0SCTL_SHA256="8fc33a124fd7fb85ebde92ec5393b0d22eef753b56a08aac3e350b8a85ff09a2" ;; \
     *) echo "platform $TARGETPLATFORM not supported" && exit 1 ;; esac && \
     curl -SL "https://github.com/k0sproject/k0sctl/releases/download/${K0SCTL_VER}/k0sctl-${K0SCTL_BIN}" -o /usr/bin/k0sctl && \
     echo "${K0SCTL_SHA256} */usr/bin/k0sctl" | sha256sum -c && chmod 0555 /usr/bin/k0sctl && \
