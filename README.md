@@ -13,7 +13,7 @@ any other contribution is welcome.
 ## containerimage
 
 The image built with the [Dockerfile][repo-dockerfile] is based on [Alpine Linux
-3.16.0][link-alpine-release] and the [buildx ci][repo-ci-buildx] workflow has
+3.16.x][link-alpine-release] and the [buildx ci][repo-ci-buildx] workflow has
 been prepared to build it both for `linux/amd64` and `linux/arm64` targets.
 Currently there is a lack in smoke testing during the build and testing
 unfortunately done via the pipeline template. Until this has been corrected it
@@ -46,7 +46,7 @@ My gratitude to @rstacruz as I'm heavily relying on their cheat sheets for both
 
 | package                 | version |
 | ----------------------- | ------- |
-| [k0sctl][github-k0sctl] | v0.13.0 |
+| [k0sctl][github-k0sctl] | v0.14.0 |
 
 #### Alpine
 
@@ -54,12 +54,12 @@ My gratitude to @rstacruz as I'm heavily relying on their cheat sheets for both
 | ------------------------------- | ---------- |
 | bash                            | 5.1.16-r2  |
 | coreutils                       | 9.1-r0     |
-| curl                            | 7.83.1-r1  |
-| git                             | 2.36.1-r0  |
-| gnupg                           | 2.2.35-r3  |
-| grep                            | 2.36.1-r0  |
+| curl                            | 7.83.1-r3  |
+| git                             | 2.36.2-r0  |
+| gnupg                           | 2.2.35-r4  |
+| grep                            | 3.7-r0     |
 | mtr                             | 0.95-r1    |
-| openssl                         | 1.1.1o-r0  |
+| openssl                         | 1.1.1q-r0  |
 
 #### scripts
 
@@ -170,7 +170,7 @@ operation.
 [link-concourse]: https://concourse-ci.org/
 [link-k0sproject]: https://k0sproject.io/
 [link-alpine-packages]: https://pkgs.alpinelinux.org/packages?name=&branch=v3.16
-[link-alpine-release]: https://alpinelinux.org/posts/Alpine-3.16.0-released.html
+[link-alpine-release]: https://alpinelinux.org/releases/
 [link-github-gpg]:
   https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification#gpg-commit-signature-verification
 [link-gnupg-keygen]:

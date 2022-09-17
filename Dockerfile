@@ -9,12 +9,12 @@ SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
 RUN apk add --no-cache \
         "bash>=5.1.16-r2" \
         "coreutils>=9.1-r0" \
-        "curl>=7.83.1-r1" \
-        "git>=2.36.1-r0" \
-        "gnupg>=2.2.35-r3" \
-        "grep>=2.36.1-r0" \
+        "curl>=7.83.1-r3" \
+        "git>=2.36.2-r0" \
+        "gnupg>=2.2.35-r4" \
+        "grep>=3.7-r0" \
         "mtr>=0.95-r1" \
-        "openssl>=1.1.1o-r0" \
+        "openssl>=1.1.1q-r0" \
         && \
     case "${TARGETPLATFORM:-linux/amd64}" in \
     "linux/amd64") K0SCTL_BIN="linux-x64"   K0SCTL_SHA256="7fbe42adb4f775e2f87b4dc46ed97aa7d4c0ce8b9135e799a122a4c2fbec2b59" ;; \
