@@ -42,24 +42,24 @@ My gratitude to @rstacruz as I'm heavily relying on their cheat sheets for both
 
 ### inventory
 
+#### Alpine
+
+| [package][link-alpine-packages] | version =  |
+| ------------------------------- | ---------- |
+| bash                            | 5.1.16-r2  |
+| coreutils                       | 9.1-r0     |
+| curl                            | 7.83.1-r3  |
+| git                             | 2.36.3-r0  |
+| gnupg                           | 2.2.35-r4  |
+| grep                            | 3.7-r0     |
+| mtr                             | 0.95-r1    |
+| openssl                         | 1.1.1q-r0  |
+
 #### Github
 
 | package                 | version |
 | ----------------------- | ------- |
 | [k0sctl][github-k0sctl] | v0.14.0 |
-
-#### Alpine
-
-| [package][link-alpine-packages] | version >= |
-| ------------------------------- | ---------- |
-| bash                            | 5.1.16-r2  |
-| coreutils                       | 9.1-r0     |
-| curl                            | 7.83.1-r3  |
-| git                             | 2.36.2-r0  |
-| gnupg                           | 2.2.35-r4  |
-| grep                            | 3.7-r0     |
-| mtr                             | 0.95-r1    |
-| openssl                         | 1.1.1q-r0  |
 
 #### scripts
 
@@ -159,10 +159,10 @@ operation.
 
 ---
 
-[image-git-backups]: /images/git-backups.png
-[image-job-init]: /images/git-init.png
-[image-job-install]: /images/job-install-restoring.png
-[image-pipeline]: /images/pipeline.png
+[image-git-backups]: images/git-backups.png
+[image-job-init]: images/git-init.png
+[image-job-install]: images/job-install-restoring.png
+[image-pipeline]: images/pipeline.png
 [github-k0sctl]: https://github.com/k0sproject/k0sctl
 [github-k0sctl-restore]:
   https://github.com/k0sproject/k0sctl/pull/149/commits/6e7c262904ed05b7068e818954a5091d25504065#diff-2cad3981690f3fb1f7b9494273cb87a7b751a5f3f884b9ad0e6a119d60f2f1a2R25
@@ -177,9 +177,9 @@ operation.
   https://gnupg.org/documentation/manuals/gnupg/OpenPGP-Key-Management.html#OpenPGP-Key-Management
 [link-markdown]: https://devhints.io/markdown
 [link-openssl-enc]: https://www.openssl.org/docs/man1.1.1/man1/enc.html
-[repo-ci-buildx]: /.github/workflows/buildx-ci.yml
-[repo-dockerfile]: /Dockerfile
-[repo-pipeline]: /ci/pipeline.yml
-[repo-pipeline-vars]: /ci/vars-example.yml
-[repo-script-common]: /scripts/common.sh
-[repo-script-k0sctl-handler]: /scripts/k0sctl-handler.sh
+[repo-ci-buildx]: .github/workflows/buildx-ci.yml
+[repo-dockerfile]: Dockerfile
+[repo-pipeline]: ci/pipeline.yml
+[repo-pipeline-vars]: ci/vars-example.yml
+[repo-script-common]: scripts/common.sh
+[repo-script-k0sctl-handler]: scripts/k0sctl-handler.sh
