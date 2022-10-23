@@ -3,18 +3,44 @@
 FROM alpine:3.16.2 as release
 
 ARG TARGETPLATFORM
+
+# renovate: datasource=repology depName=alpine_3_16/bash versioning=loose
+ENV BASH_VERSION="5.1.16-r2"
+
+# renovate: datasource=repology depName=alpine_3_16/coreutils versioning=loose
+ENV COREUTILS_VERSION="9.1-r0"
+
+# renovate: datasource=repology depName=alpine_3_16/curl versioning=loose
+ENV CURL_VERSION="7.83.1-r3"
+
+# renovate: datasource=repology depName=alpine_3_16/git versioning=loose
+ENV GIT_VERSION="2.36.3-r0"
+
+# renovate: datasource=repology depName=alpine_3_16/gnupg versioning=loose
+ENV GNUPG_VERSION="2.2.35-r4"
+
+# renovate: datasource=repology depName=alpine_3_16/grep versioning=loose
+ENV GREP_VERSION="3.7-r0"
+
+# renovate: datasource=repology depName=alpine_3_16/mtr versioning=loose
+ENV MTR_VERSION="0.95-r1"
+
+# renovate: datasource=repology depName=alpine_3_16/openssl versioning=loose
+ENV OPENSSL_VERSION="1.1.1q-r0"
+
+# Releases: https://github.com/k0sproject/k0sctl/releases/latest
 ENV K0SCTL_VER="v0.14.0"
 
 SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
 RUN apk add --no-cache \
-        "bash>=5.1.16-r2" \
-        "coreutils>=9.1-r0" \
-        "curl>=7.83.1-r3" \
-        "git>=2.36.2-r0" \
-        "gnupg>=2.2.35-r4" \
-        "grep>=3.7-r0" \
-        "mtr>=0.95-r1" \
-        "openssl>=1.1.1q-r0" \
+        bash="${BASH_VERSION}" \
+        coreutils="${COREUTILS_VERSION}" \
+        curl="${CURL_VERSION}" \
+        git="${GIT_VERSION}" \
+        gnupg="${GNUPG_VERSION}" \
+        grep="${GREP_VERSION}" \
+        mtr="${MTR_VERSION}" \
+        openssl="${OPENSSL_VERSION}" \
         && \
     case "${TARGETPLATFORM:-linux/amd64}" in \
     "linux/amd64") K0SCTL_BIN="linux-x64"   K0SCTL_SHA256="7fbe42adb4f775e2f87b4dc46ed97aa7d4c0ce8b9135e799a122a4c2fbec2b59" ;; \
