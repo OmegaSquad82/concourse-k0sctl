@@ -33,14 +33,14 @@ ENV K0SCTL_VER="v0.14.0"
 
 SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
 RUN apk add --no-cache \
-        "bash=${BASH_VERSION}" \
-        "coreutils=${COREUTILS_VERSION}" \
-        "curl=${CURL_VERSION}" \
-        "git=${GIT_VERSION}" \
-        "gnupg=${GNUPG_VERSION}" \
-        "grep=${GREP_VERSION}" \
-        "mtr=${MTR_VERSION}" \
-        "openssl=${OPENSSL_VERSION}" \
+        bash="${BASH_VERSION}" \
+        coreutils="${COREUTILS_VERSION}" \
+        curl="${CURL_VERSION}" \
+        git="${GIT_VERSION}" \
+        gnupg="${GNUPG_VERSION}" \
+        grep="${GREP_VERSION}" \
+        mtr="${MTR_VERSION}" \
+        openssl="${OPENSSL_VERSION}" \
         && \
     case "${TARGETPLATFORM:-linux/amd64}" in \
     "linux/amd64") K0SCTL_BIN="linux-x64"   K0SCTL_SHA256="7fbe42adb4f775e2f87b4dc46ed97aa7d4c0ce8b9135e799a122a4c2fbec2b59" ;; \
