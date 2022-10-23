@@ -40,7 +40,7 @@ RUN apk add --no-cache \
         gnupg="${GNUPG_VERSION}" \
         grep="${GREP_VERSION}" \
         mtr="${MTR_VERSION}" \
-        openssl="OPENSSL_VERSION}" \
+        openssl="${OPENSSL_VERSION}" \
         && \
     case "${TARGETPLATFORM:-linux/amd64}" in \
     "linux/amd64") K0SCTL_BIN="linux-x64"   K0SCTL_SHA256="7fbe42adb4f775e2f87b4dc46ed97aa7d4c0ce8b9135e799a122a4c2fbec2b59" ;; \
