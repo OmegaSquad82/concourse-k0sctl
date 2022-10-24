@@ -1,5 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "docker": {
+    "enabled": true
+  },
   "extends": ["config:base"],
   "pre-commit": {
     "enabled": true
