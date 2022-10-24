@@ -17,6 +17,7 @@
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
   ],
+  "semanticCommits": "enabled",
   "vulnerabilityAlerts": {
     "enabled": true
   }
