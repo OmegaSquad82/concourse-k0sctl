@@ -1,6 +1,6 @@
 # concourse-k0sctl
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/3d2c20609b6a4720b107c7fd31f8c20e)](https://www.codacy.com/gh/OmegaSquad82/concourse-k0sctl/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=OmegaSquad82/concourse-k0sctl&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/3d2c20609b6a4720b107c7fd31f8c20e)](https://www.codacy.com/gh/OmegaSquad82/concourse-k0sctl/dashboard?utm_source=github.com&utm_medium=referral&utm_content=OmegaSquad82/concourse-k0sctl&utm_campaign=Badge_Grade)
 
 It's a container image which instruments [k0sctl][github-k0sctl], a CLI to
 manage [k0s][link-k0sproject] Kubernetes clusters. The image currently is
@@ -44,22 +44,22 @@ My gratitude to @rstacruz as I'm heavily relying on their cheat sheets for both
 
 #### Alpine
 
-| [package][link-alpine-packages] | version =  |
-| ------------------------------- | ---------- |
-| bash                            | 5.1.16-r2  |
-| coreutils                       | 9.1-r0     |
-| curl                            | 7.83.1-r3  |
-| git                             | 2.36.3-r0  |
-| gnupg                           | 2.2.35-r4  |
-| grep                            | 3.7-r0     |
-| mtr                             | 0.95-r1    |
-| openssl                         | 1.1.1q-r0  |
+| [package][link-alpine-packages] |
+| ------------------------------- |
+| bash                            |
+| coreutils                       |
+| curl                            |
+| git                             |
+| gnupg                           |
+| grep                            |
+| mtr                             |
+| openssl                         |
 
 #### Github
 
-| package                 | version |
-| ----------------------- | ------- |
-| [k0sctl][github-k0sctl] | v0.14.0 |
+| package                 |
+| ----------------------- |
+| [k0sctl][github-k0sctl] |
 
 #### scripts
 
