@@ -26,7 +26,7 @@ ENV GREP_VERSION="3.7-r0"
 ENV MTR_VERSION="0.95-r1"
 
 # renovate: datasource=repology depName=alpine_3_16/openssl versioning=loose
-ENV OPENSSL_VERSION="1.1.1q-r0"
+ENV OPENSSL_VERSION="1.1.1s-r0"
 
 # Releases: https://github.com/k0sproject/k0sctl/releases/latest
 ENV K0SCTL_VER="v0.14.0"
