@@ -42,7 +42,7 @@ My gratitude to @rstacruz as I'm heavily relying on their cheat sheets for both
 
 ### inventory
 
-Please see the [Dependency Dashboard|https://github.com/OmegaSquad82/concourse-k0sctl/issues/32] for an inventory of automatically maintained versions.
+Please see the [Dependency Dashboard][dep-dashboard] for an inventory of automatically maintained versions.
 
 #### Alpine
 
@@ -160,7 +160,7 @@ operation.
 ![k0sctl backup archives][image-git-backups]
 
 ---
-
+[dep-dashboard]: https://github.com/OmegaSquad82/concourse-k0sctl/issues/32
 [image-git-backups]: images/git-backups.png
 [image-job-init]: images/git-init.png
 [image-job-install]: images/job-install-restoring.png
