@@ -42,7 +42,8 @@ My gratitude to @rstacruz as I'm heavily relying on their cheat sheets for both
 
 ### inventory
 
-Please see the [Dependency Dashboard][dep-dashboard] for an inventory of automatically maintained versions.
+Please see the [Dependency Dashboard][dep-dashboard] for a full inventory of
+automatically maintained versions for Github Actions, Dockerfile and Packages.
 
 #### Alpine
 
