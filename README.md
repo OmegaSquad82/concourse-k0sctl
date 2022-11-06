@@ -42,6 +42,8 @@ My gratitude to @rstacruz as I'm heavily relying on their cheat sheets for both
 
 ### inventory
 
+Please see the [Dependency Dashboard|https://github.com/OmegaSquad82/concourse-k0sctl/issues/32] for an inventory of automatically maintained versions.
+
 #### Alpine
 
 | [package][link-alpine-packages] |
