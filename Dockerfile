@@ -22,14 +22,14 @@ ENV GNUPG_VERSION="2.2.35-r4"
 # renovate: datasource=repology depName=alpine_3_17/grep versioning=loose
 ENV GREP_VERSION="3.7-r0"
 
+# renovate: datasource=repology depName=alpine_3_17/k0sctl versioning=loose
+ENV K0SCTL_VERSION="0.14.0-r2"
+
 # renovate: datasource=repology depName=alpine_3_17/mtr versioning=loose
 ENV MTR_VERSION="0.95-r1"
 
 # renovate: datasource=repology depName=alpine_3_17/openssl versioning=loose
 ENV OPENSSL_VERSION="1.1.1s-r0"
-
-# Releases: https://github.com/k0sproject/k0sctl/releases/latest
-ENV K0SCTL_VER="v0.14.0"
 
 SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
 RUN apk add --no-cache \
@@ -39,15 +39,10 @@ RUN apk add --no-cache \
         git="${GIT_VERSION}" \
         gnupg="${GNUPG_VERSION}" \
         grep="${GREP_VERSION}" \
+        k0sctl="${K0SCTL_VERSION}" \
         mtr="${MTR_VERSION}" \
         openssl="${OPENSSL_VERSION}" \
         && \
-    case "${TARGETPLATFORM:-linux/amd64}" in \
-    "linux/amd64") K0SCTL_BIN="linux-x64"   K0SCTL_SHA256="7fbe42adb4f775e2f87b4dc46ed97aa7d4c0ce8b9135e799a122a4c2fbec2b59" ;; \
-    "linux/arm64") K0SCTL_BIN="linux-arm64" K0SCTL_SHA256="8fc33a124fd7fb85ebde92ec5393b0d22eef753b56a08aac3e350b8a85ff09a2" ;; \
-    *) echo "platform $TARGETPLATFORM not supported" && exit 1 ;; esac && \
-    curl -SL "https://github.com/k0sproject/k0sctl/releases/download/${K0SCTL_VER}/k0sctl-${K0SCTL_BIN}" -o /usr/bin/k0sctl && \
-    echo "${K0SCTL_SHA256} */usr/bin/k0sctl" | sha256sum -c && chmod 0555 /usr/bin/k0sctl && \
     apk stats
 
 WORKDIR /root/
