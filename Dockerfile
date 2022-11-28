@@ -11,7 +11,7 @@ ENV BASH_VERSION="5.1.16-r2"
 ENV COREUTILS_VERSION="9.1-r0"
 
 # renovate: datasource=repology depName=alpine_3_17/curl versioning=loose
-ENV CURL_VERSION="7.83.1-r4"
+ENV CURL_VERSION="7.86.0-r1"
 
 # renovate: datasource=repology depName=alpine_3_17/git versioning=loose
 ENV GIT_VERSION="2.36.3-r0"
