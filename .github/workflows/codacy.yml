@@ -35,7 +35,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@cfff30e3217c728b97114255e6236e4d3c72c98c
+        uses: codacy/codacy-analysis-cli-action@4b45a58e99ca13fc4fee873f06bcbb445228002a
         with:
           # Check https://github.com/codacy/codacy-analysis-cli#project-token to get your project token from your Codacy repository
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
