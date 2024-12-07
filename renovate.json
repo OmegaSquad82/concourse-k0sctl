@@ -1,27 +1,44 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "automerge": true,
-  "automergeType": "pr",
-  "dependencyDashboard": true,
-  "docker": {
-    "enabled": true
-  },
-  "extends": ["config:base"],
-  "pre-commit": {
-    "enabled": true
-  },
-  "rebaseWhen": "behind-base-branch",
-  "regexManagers": [
-    {
-      "fileMatch": ["^Dockerfile$"],
-      "matchStrings": [
-        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sENV .*?_VERSION=\"(?<currentValue>.*)\"\\s"
-      ],
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "automerge": true,
+    "automergeType": "pr",
+    "dependencyDashboard": true,
+    "docker": {
+        "enabled": true
+    },
+    "extends": [
+        "config:base"
+    ],
+    "pre-commit": {
+        "enabled": true
+    },
+    "rebaseWhen": "behind-base-branch",
+    "regexManagers": [
+        {
+            "fileMatch": [
+                "^Dockerfile$"
+            ],
+            "matchStrings": [
+                "# renovate: datasource=repology depName=alpine_(?<currentValue>\\d+[._]\\d+)"
+            ],
+            "currentValueTemplate": "{{{ replace '_' '.' currentValue }}}",
+            "datasourceTemplate": "docker",
+            "depNameTemplate": "docker.io/library/alpine",
+            "versioningTemplate": "regex:^(?<major>\\d+)[._](?<minor>\\d+)$",
+            "autoReplaceStringTemplate": "# renovate: datasource=repology depName=alpine_{{{newMajor}}}_{{{newMinor}}}"
+        },
+        {
+            "fileMatch": [
+                "^Dockerfile$"
+            ],
+            "matchStrings": [
+                "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sENV .*?_VERSION=\"(?<currentValue>.*)\"\\s"
+            ],
+            "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+        }
+    ],
+    "semanticCommits": "enabled",
+    "vulnerabilityAlerts": {
+        "enabled": true
     }
-  ],
-  "semanticCommits": "enabled",
-  "vulnerabilityAlerts": {
-    "enabled": true
-  }
 }
