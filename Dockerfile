@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.12
 # https://devhints.io/dockerfile
-FROM alpine:3.20.3 as release
+FROM alpine:3.21.0 as release
 
 ARG TARGETPLATFORM
 
