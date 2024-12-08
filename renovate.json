@@ -3,21 +3,15 @@
     "automerge": true,
     "automergeType": "pr",
     "dependencyDashboard": true,
-    "docker": {
-        "enabled": true
-    },
-    "extends": [
-        "config:base"
-    ],
+    "extends": ["config:recommended"],
     "pre-commit": {
         "enabled": true
     },
     "rebaseWhen": "behind-base-branch",
-    "regexManagers": [
+    "customManagers": [
         {
-            "fileMatch": [
-                "^Dockerfile$"
-            ],
+            "customType": "regex",
+            "fileMatch": ["^Dockerfile$"],
             "matchStrings": [
                 "# renovate: datasource=repology depName=alpine_(?<currentValue>\\d+[._]\\d+)"
             ],
@@ -28,9 +22,8 @@
             "autoReplaceStringTemplate": "# renovate: datasource=repology depName=alpine_{{{newMajor}}}_{{{newMinor}}}"
         },
         {
-            "fileMatch": [
-                "^Dockerfile$"
-            ],
+            "customType": "regex",
+            "fileMatch": ["^Dockerfile$"],
             "matchStrings": [
                 "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sENV .*?_VERSION=\"(?<currentValue>.*)\"\\s"
             ],
@@ -40,5 +33,11 @@
     "semanticCommits": "enabled",
     "vulnerabilityAlerts": {
         "enabled": true
-    }
+    },
+    "packageRules": [
+        {
+            "matchCategories": ["docker"],
+            "enabled": true
+        }
+    ]
 }
