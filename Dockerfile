@@ -26,7 +26,7 @@ ENV GREP_VERSION="3.8-r1"
 ENV K0SCTL_VERSION="0.14.0-r6"
 
 # renovate: datasource=repology depName=alpine_3_21/mtr versioning=loose
-ENV MTR_VERSION="0.95-r1"
+ENV MTR_VERSION="0.95-r2"
 
 # renovate: datasource=repology depName=alpine_3_21/openssl versioning=loose
 ENV OPENSSL_VERSION="3.0.11-r0"
