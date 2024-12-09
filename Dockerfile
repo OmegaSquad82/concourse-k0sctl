@@ -5,7 +5,7 @@ FROM alpine:3.21.0 as release
 ARG TARGETPLATFORM
 
 # renovate: datasource=repology depName=alpine_3_21/bash versioning=loose
-ENV BASH_VERSION="5.2.15-r0"
+ENV BASH_VERSION="5.2.37-r0"
 
 # renovate: datasource=repology depName=alpine_3_21/coreutils versioning=loose
 ENV COREUTILS_VERSION="9.1-r0"
