@@ -17,7 +17,7 @@ ENV CURL_VERSION="8.11.0-r2"
 ENV GIT_VERSION="2.47.1-r0"
 
 # renovate: datasource=repology depName=alpine_3_21/gnupg versioning=loose
-ENV GNUPG_VERSION="2.2.40-r0"
+ENV GNUPG_VERSION="2.4.7-r0"
 
 # renovate: datasource=repology depName=alpine_3_21/grep versioning=loose
 ENV GREP_VERSION="3.8-r1"
