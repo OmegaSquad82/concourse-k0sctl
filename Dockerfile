@@ -8,7 +8,7 @@ ARG TARGETPLATFORM
 ENV BASH_VERSION="5.2.37-r0"
 
 # renovate: datasource=repology depName=alpine_3_21/coreutils versioning=loose
-ENV COREUTILS_VERSION="9.5-r1"
+ENV COREUTILS_VERSION="9.5-r2"
 
 # renovate: datasource=repology depName=alpine_3_21/curl versioning=loose
 ENV CURL_VERSION="8.11.1-r0"
