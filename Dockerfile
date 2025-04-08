@@ -23,7 +23,7 @@ ENV GNUPG_VERSION="2.4.7-r0"
 ENV GREP_VERSION="3.11-r0"
 
 # renovate: datasource=repology depName=alpine_3_21/k0sctl versioning=loose
-ENV K0SCTL_VERSION="0.19.4-r3"
+ENV K0SCTL_VERSION="0.19.4-r4"
 
 # renovate: datasource=repology depName=alpine_3_21/mtr versioning=loose
 ENV MTR_VERSION="0.95-r2"
