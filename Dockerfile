@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.14
+# syntax=docker/dockerfile:1.15
 # https://devhints.io/dockerfile
 FROM alpine:3.21.3 AS release
 
