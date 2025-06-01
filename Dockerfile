@@ -29,7 +29,7 @@ ENV K0SCTL_VERSION="0.19.4-r5"
 ENV MTR_VERSION="0.95-r2"
 
 # renovate: datasource=repology depName=alpine_3_22/openssl versioning=loose
-ENV OPENSSL_VERSION="3.3.3-r0"
+ENV OPENSSL_VERSION="3.5.0-r0"
 
 SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
 RUN apk add --no-cache \
