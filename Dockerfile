@@ -20,7 +20,7 @@ ENV GIT_VERSION="2.49.0-r0"
 ENV GNUPG_VERSION="2.4.7-r0"
 
 # renovate: datasource=repology depName=alpine_3_22/grep versioning=loose
-ENV GREP_VERSION="3.11-r0"
+ENV GREP_VERSION="3.12-r0"
 
 # renovate: datasource=repology depName=alpine_3_22/k0sctl versioning=loose
 ENV K0SCTL_VERSION="0.19.4-r5"
