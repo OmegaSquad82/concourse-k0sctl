@@ -22,7 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@3f1544eb9eff0b4d4d279b33f704a06fcf8d0e43
+        uses: docker/setup-buildx-action@622913496df23a5293cfb3418e5836ee4dd28f3a
       - name: Login to DockerHub
         uses: docker/login-action@3d100841f68d4548bf57e52eb27bd33ec5069f55
         with:
