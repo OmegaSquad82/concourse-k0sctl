@@ -49,7 +49,7 @@ WORKDIR /root/
 COPY scripts/ /usr/local/bin
 CMD ["k0sctl-handler.sh"]
 
-FROM release as testing
+FROM release AS testing
 COPY tests/ /
 RUN /installed.sh && k0sctl version
 
