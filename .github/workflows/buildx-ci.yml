@@ -29,7 +29,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and export to Docker
-        uses: docker/build-push-action@ccc2b40e9ea6518f9252a22a990f8e868370f62e
+        uses: docker/build-push-action@cb8fc7586f9ad9441b20c33e0f6e8b1b58d8b4c6
         with:
           context: .
           load: true
@@ -38,7 +38,7 @@ jobs:
         run: |
           docker run --rm ${{ env.TESTING_TAG }}
       - name: Build and push
-        uses: docker/build-push-action@ccc2b40e9ea6518f9252a22a990f8e868370f62e
+        uses: docker/build-push-action@cb8fc7586f9ad9441b20c33e0f6e8b1b58d8b4c6
         with:
           context: .
           platforms: linux/amd64,linux/arm64
