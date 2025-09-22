@@ -26,6 +26,6 @@ repos:
 
   # docker related stuff
   - repo: https://github.com/hadolint/hadolint
-    rev: v2.13.1
+    rev: v2.14.0
     hooks:
       - id: hadolint
