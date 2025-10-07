@@ -41,6 +41,6 @@ jobs:
                   severity-cutoff: medium
                   fail-build: false
             - name: Upload Anchore Scan Report
-              uses: github/codeql-action/upload-sarif@v3
+              uses: github/codeql-action/upload-sarif@v4
               with:
                   sarif_file: ${{ steps.scan.outputs.sarif }}
