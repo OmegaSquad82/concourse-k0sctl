@@ -4,31 +4,31 @@ FROM alpine:3.22.2 AS release
 
 ARG TARGETPLATFORM
 
-# renovate: datasource=repology depName=alpine_3_22/bash versioning=loose
+# renovate: datasource=repology depName=alpine_3_23/bash versioning=loose
 ENV BASH_VERSION="5.2.37-r0"
 
-# renovate: datasource=repology depName=alpine_3_22/coreutils versioning=loose
+# renovate: datasource=repology depName=alpine_3_23/coreutils versioning=loose
 ENV COREUTILS_VERSION="9.7-r1"
 
-# renovate: datasource=repology depName=alpine_3_22/curl versioning=loose
+# renovate: datasource=repology depName=alpine_3_23/curl versioning=loose
 ENV CURL_VERSION="8.14.1-r2"
 
-# renovate: datasource=repology depName=alpine_3_22/git versioning=loose
+# renovate: datasource=repology depName=alpine_3_23/git versioning=loose
 ENV GIT_VERSION="2.49.1-r0"
 
-# renovate: datasource=repology depName=alpine_3_22/gnupg versioning=loose
+# renovate: datasource=repology depName=alpine_3_23/gnupg versioning=loose
 ENV GNUPG_VERSION="2.4.7-r0"
 
-# renovate: datasource=repology depName=alpine_3_22/grep versioning=loose
+# renovate: datasource=repology depName=alpine_3_23/grep versioning=loose
 ENV GREP_VERSION="3.12-r0"
 
-# renovate: datasource=repology depName=alpine_3_22/k0sctl versioning=loose
+# renovate: datasource=repology depName=alpine_3_23/k0sctl versioning=loose
 ENV K0SCTL_VERSION="0.24.0-r4"
 
-# renovate: datasource=repology depName=alpine_3_22/mtr versioning=loose
+# renovate: datasource=repology depName=alpine_3_23/mtr versioning=loose
 ENV MTR_VERSION="0.96-r0"
 
-# renovate: datasource=repology depName=alpine_3_22/openssl versioning=loose
+# renovate: datasource=repology depName=alpine_3_23/openssl versioning=loose
 ENV OPENSSL_VERSION="3.5.4-r0"
 
 SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
